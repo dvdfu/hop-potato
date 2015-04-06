@@ -44,6 +44,5 @@ function love.draw()
 	for i = 1, table.getn(players) do
 		players[i]:draw()
 	end
-
 	timer:draw()
 end

@@ -1,11 +1,12 @@
 class = require 'lib.middleclass'
+Controller = require 'controller'
 Player = class('Player')
 
 --define collision properties
 local type = function(item, other)
 	if other.name == 'platform' then
 		return 'cross'
-	else 
+	else
 		return 'slide'
 	end
 end
@@ -18,6 +19,8 @@ function Player:initialize(num)
 	self.vy = 0
 	self.w = 32
 	self.h = 32
+
+	self.controller = Controller:new(num)
 
 	if num == 1 then
 		self.left = 'a'
@@ -37,7 +40,7 @@ function Player:update()
 	elseif love.keyboard.isDown(self.right) then
 		self.vx = 3
 	else
-		self.vx = 0
+		self.vx = self.controller:leftAnalogMove() * 5
 	end
 
 	--control falling speed
