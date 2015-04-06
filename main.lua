@@ -3,12 +3,13 @@ Player = require 'player'
 Bump = require 'lib.bump'
 
 function love.load()
+	math.randomseed(os.time())
 	love.graphics.setDefaultFilter('nearest', 'nearest')
 	love.graphics.setBackgroundColor(40, 50, 60)
 
 	world = Bump.newWorld(64)
-	
-	player = Player:new(1)
+	players = {}
+	players[1] = Player:new(1)
 	platforms = {}
 	for i = 0, 10, 1 do
 		local width = math.random(60, 100)
@@ -19,12 +20,16 @@ function love.load()
 end
 
 function love.update(dt)
-	player:update()
+	for i = 1, table.getn(players) do
+		players[i]:update()
+	end
 end
 
 function love.draw()
 	for i = 0, 10, 1 do
 		platforms[i]:draw()
 	end
-	player:draw()
+	for i = 1, table.getn(players) do
+		players[i]:draw()
+	end
 end

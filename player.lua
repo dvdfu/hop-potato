@@ -63,6 +63,7 @@ function Player:update()
 		local col = cols[i]
 		if col.other.name == 'platform' then
 			if col.normal.y == -1 then
+				self.y = col.other.y - self.h
 				self.vy = -8
 			end
 		end
