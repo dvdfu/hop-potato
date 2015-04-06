@@ -23,7 +23,7 @@ function love.load()
 
 	timer = Timer:new()
 
-	music = love.audio.newSource("sfx/yakety_sax.mp3")
+	music = love.audio.newSource("sfx/yakety-sax.mp3")
 	music:setLooping(true)
 	music:play()
 end
