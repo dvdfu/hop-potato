@@ -13,11 +13,11 @@ function love.load()
 	font = love.graphics.newFont(14)
 	love.graphics.setFont(font)
 
-	timer = 5
+	timer = 30
 end
 
 function love.update(dt)
-	if timer <= 0 then 
+	if timer - dt <= 0 then 
 		timer = 0
 	else 
 		timer = timer - dt
