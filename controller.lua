@@ -7,7 +7,11 @@ end
 
 function Controller:leftAnalogMove()
 	local leftx = self.joystick:getGamepadAxis('leftx')
-	return leftx if math.abs(leftx) > 0.75 else 0
+	if math.abs(leftx) > 0.075 then
+		return leftx
+	else
+		return 0
+	end
 end
 
 return Controller
