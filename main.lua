@@ -1,10 +1,13 @@
 Platform = require 'platform'
 Player = require 'player'
+Bump = require 'lib.bump'
 
 function love.load()
 	love.graphics.setDefaultFilter('nearest', 'nearest')
 	love.graphics.setBackgroundColor(40, 50, 60)
 
+	world = Bump.newWorld(64)
+	
 	player = Player:new(1)
 	platforms = {}
 	for i = 0, 10, 1 do
