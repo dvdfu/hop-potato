@@ -35,8 +35,13 @@ end
 
 function Player:update()
 	--TODO: use controllers
-
-	self.vx = self.controller:leftAnalogMove() * 5
+	if love.keyboard.isDown(self.left) then
+		self.vx = -3
+	elseif love.keyboard.isDown(self.right) then
+		self.vx = 3
+	else
+		self.vx = self.controller:leftAnalogMove() * 5
+	end
 
 	--control falling speed
 	if self.vy < 20 then
