@@ -1,24 +1,13 @@
 Controller = class('Controller')
 
-function Controller:initialize(joysticks)
-	self.position = {x = 400, y = 300}
-	self.speed = 10
-	self.joysticks = joysticks
+function Controller:initialize(i)
+	self.controller = i
+	self.joystick = love.joystick.getJoysticks()[i]
 end
 
-function Controller:getPos()
-	return self.position
-end
-
-function Controller:moveBall()
-	table.foreach(self.joysticks, function(_index)
-		local leftx = self.joysticks[_index]:getGamepadAxis("leftx")
-
-		if leftx < -0.1 or leftx > 0.1 then
-			local delta = self.position.x + leftx * self.speed
-			self.position.x = delta
-		end
-	end)
+function Controller:leftAnalogMove()
+	local leftx = self.joystick:getGamepadAxis('leftx')
+	return leftx if math.abs(leftx) > 0.75 else 0
 end
 
 return Controller
