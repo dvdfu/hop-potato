@@ -1,7 +1,6 @@
 Controller = class('Controller')
 
 function Controller:initialize(joysticks)
-	self.lastbutton = "none"
 	self.position = {x = 400, y = 300}
 	self.speed = 10
 	self.joysticks = joysticks
