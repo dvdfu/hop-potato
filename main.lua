@@ -1,9 +1,7 @@
+Bump = require 'lib.bump'
 Platform = require 'platform'
 Timer = require 'timer'
-
-platforms = {}
 Player = require 'player'
-Bump = require 'lib.bump'
 
 function love.load()
 	math.randomseed(os.time())
@@ -12,12 +10,14 @@ function love.load()
 
 	world = Bump.newWorld(64)
 	players = {}
-	players[1] = Player:new(1)
+	for i = 1, 2, 1 do
+		players[i] = Player:new(i)
+	end
 	platforms = {}
-	for i = 0, 10, 1 do
+	for i = 0, 20, 1 do
 		local width = math.random(60, 100)
 		local x = math.random(0, love.graphics.getWidth() - width)
-		local y = math.random(0, love.graphics.getHeight() - 16)
+		local y = math.random(100, love.graphics.getHeight() - 16)
 		platforms[i] = Platform:new(x, y, width)
 	end
 
@@ -25,24 +25,24 @@ function love.load()
 
 	music = love.audio.newSource("sfx/yakety-sax.mp3")
 	music:setLooping(true)
-	music:play()
+	-- music:play()
 end
 
 function love.update(dt)
-	for i = 1, table.getn(players) do
+	table.foreach(players, function (i)
 		players[i]:update()
-	end
+	end)
 
 	timer:update(dt)
 end
 
 function love.draw()
-	for i = 0, 10, 1 do
+	table.foreach(platforms, function (i)
 		platforms[i]:draw()
-	end
+	end)
 
-	for i = 1, table.getn(players) do
+	table.foreach(players, function (i)
 		players[i]:draw()
-	end
+	end)
 	timer:draw()
 end

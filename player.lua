@@ -12,6 +12,10 @@ local type = function(item, other)
 end
 
 function Player:initialize(num)
+	--consts
+	self.moveVel = 6
+	self.jumpVel = 8
+
 	self.num = num
 	self.x = math.random(0, 500)
 	self.y = math.random(0, 500)
@@ -25,22 +29,25 @@ function Player:initialize(num)
 	if num == 1 then
 		self.left = 'a'
 		self.right = 'd'
+	elseif num == 2 then
+		self.left = 'left'
+		self.right = 'right'
 	end
 
 	--name for collision identification
-	self.name = 'player' .. num
+	self.name = 'player'
 	--world is defined in main.lua
 	world:add(self, self.x, self.y, self.w, self.h)
 end
 
 function Player:update()
-	--TODO: use controllers
-	if love.keyboard.isDown(self.left) then
+	--movement
+	if love.keyboard.isDown(self.left) then --keyboard fallback
 		self.vx = -3
 	elseif love.keyboard.isDown(self.right) then
 		self.vx = 3
 	else
-		self.vx = self.controller:leftAnalogMove() * 5
+		self.vx = self.controller:leftAnalogMove() * self.moveVel
 	end
 
 	--control falling speed
@@ -49,10 +56,6 @@ function Player:update()
 	else
 		self.vy = 20
 	end
-
-	--update position
-	-- self.x = self.x + self.vx
-	-- self.y = self.y + self.vy
 
 	--wrap around room
 	if self.y > love.window.getHeight() then self.y = -self.h end
@@ -65,9 +68,16 @@ function Player:update()
 	for i = 1, len do
 		local col = cols[i]
 		if col.other.name == 'platform' then
+			if col.normal.y == -1 and self.y + self.h - self.vy < col.other.y then
+				self.y = col.other.y - self.h
+				self.vy = -self.jumpVel
+			end
+		end
+		if col.other.name == 'player' then
 			if col.normal.y == -1 then
 				self.y = col.other.y - self.h
-				self.vy = -8
+				self.vy = -self.jumpVel
+				col.other.vy = 0
 			end
 		end
 	end

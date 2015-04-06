@@ -6,12 +6,10 @@ function Controller:initialize(i)
 end
 
 function Controller:leftAnalogMove()
-	local leftx = self.joystick:getGamepadAxis('leftx')
-	if math.abs(leftx) > 0.075 then
-		return leftx
-	else
-		return 0
-	end
+	if self.joystick == nil then return 0 end
+	local leftx = self.joystick:getGamepadAxis('leftx') or 0
+	if math.abs(leftx) > 0.075 then return leftx
+	else return 0 end
 end
 
 return Controller
