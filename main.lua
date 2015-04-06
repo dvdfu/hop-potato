@@ -1,4 +1,5 @@
 Platform = require 'platform'
+Timer = require 'timer'
 
 platforms = {}
 
@@ -10,18 +11,11 @@ function love.load()
 		platforms[i] = Platform:new(20 * i, 30 * i, 7 * i)
 	end
 
-	font = love.graphics.newFont(14)
-	love.graphics.setFont(font)
-
-	timer = 30
+	timer = Timer:new()
 end
 
 function love.update(dt)
-	if timer - dt <= 0 then 
-		timer = 0
-	else 
-		timer = timer - dt
-	end
+	timer:update(dt)
 end
 
 function love.draw()
@@ -29,5 +23,5 @@ function love.draw()
 		platforms[i]:draw()
 	end
 
-	love.graphics.printf(string.format("%.1f", timer), love.graphics.getWidth() - 34, 10, 25, 'right')
+	timer:draw()
 end
