@@ -20,4 +20,8 @@ function Timer:draw()
 	love.graphics.printf(string.format("%.1f", time), love.graphics.getWidth() - 34, 10, 25, 'right')
 end
 
+function Timer:getTime()
+	return time
+end
+
 return Timer
