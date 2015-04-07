@@ -78,19 +78,16 @@ function Player:update(dt)
 
 	self.sprite:update(dt)
 	self.timer:update(dt)
+	self.respawning = self.respawnTime > 0
 
 	--movement
-	self.vx = self.controller:leftAnalogMove() * Player.move_vel
-
-	self.respawning = self.respawnTime > 0
+	self.vx = self.controller:leftAnalogX() * Player.move_vel
 
 	--control falling speed
 	if self.respawning then
 		self.respawnTime = self.respawnTime - dt
 	elseif self.vy < 20 then
-		if not self.respawning then
-			self.vy = self.vy + Player.gravity
-		end
+		self.vy = self.vy + Player.gravity
 	else
 		self.vy = 20
 	end
