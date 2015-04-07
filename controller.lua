@@ -3,7 +3,7 @@ Controller = Class('Controller')
 function Controller:initialize(i)
 	self.controller = i
 	self.joystick = love.joystick.getJoysticks()[i]
-	self.inputType, self.rBumper, self.hatDirection = self.joystick:getGamepadMapping('rightshoulder')
+	self.inputType, self.rBumper = self.joystick:getGamepadMapping('rightshoulder')
 	self.canVibrate = self.joystick:isVibrationSupported()
 	self.id = self.joystick:getID()
 	print()
