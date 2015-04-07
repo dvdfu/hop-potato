@@ -17,7 +17,7 @@ function Timer:update(dt)
 end
 
 function Timer:draw(x, y, textWidth)
-	love.graphics.print(string.format("%i", self.time), x, y)
+	love.graphics.printf(string.format("%i", self.time), x, y, textWidth or 25, "center")
 end
 
 function Timer:getTime()

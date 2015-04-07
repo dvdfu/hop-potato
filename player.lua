@@ -119,7 +119,7 @@ function Player:draw()
 	self.sprite:draw(self.x, self.y, 0, 2, 2)
 	love.graphics.setColor(255, 255, 255, 255)
 	if carrier == self then
-		self.timer:draw(self.x, self.y - 25)
+		self.timer:draw(self.x, self.y - 25, nil)
 	end
 end
 
