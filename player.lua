@@ -2,11 +2,6 @@ require 'lib.AnAL'
 Controller = require 'controller'
 Player = Class('Player')
 
---define collision properties
-local type = function(item, other)
-	return 'cross'
-end
-
 Player.static.move_vel = 4
 Player.static.jump_vel = 8
 Player.static.gravity = 0.2
@@ -37,6 +32,11 @@ function Player:initialize(num)
 	self.name = 'player'
 	--world is defined in main.lua
 	world:add(self, self.x, self.y, self.w, self.h)
+end
+
+--define collision properties
+local type = function(item, other)
+	return 'cross'
 end
 
 function Player:collide()
@@ -106,11 +106,6 @@ end
 function Player:draw()
 	love.graphics.rectangle('fill', self.x, self.y, self.w, self.h)
 	self.sprite:draw(self.x, self.y, 0, 2, 2)
-	if carrier == self then
-		love.graphics.setColor(255, 200, 0, 255)
-		love.graphics.rectangle('fill', self.x, self.y - 8, self.w, 8)
-		love.graphics.setColor(255, 255, 255, 255)
-	end
 end
 
 return Player

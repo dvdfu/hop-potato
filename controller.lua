@@ -26,4 +26,9 @@ function Controller:rightAnalogY()
 	else return 0 end
 end
 
+function Controller:rightBumper()
+	if self.joystick == nil then return false end
+	return self.joystick:isDown(12)
+end
+
 return Controller
