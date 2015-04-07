@@ -4,8 +4,14 @@ function Controller:initialize(i)
 	self.controller = i
 	self.joystick = love.joystick.getJoysticks()[i]
 	self.inputType, self.rBumper = self.joystick:getGamepadMapping('rightshoulder')
-	self.vibration = self.joystick:isVibrationSupported()
+	self.canVibrate = self.joystick:isVibrationSupported()
 	self.id = self.joystick:getID()
+
+	if self.canVibrate then
+		left, right = self.joystick:getVibration( )
+	else
+		left, right = nil
+	end
 end
 
 function Controller:leftAnalogMove()

@@ -10,10 +10,10 @@ function love.load()
 	math.randomseed(os.time())
 	love.graphics.setDefaultFilter('nearest', 'nearest')
 	love.graphics.setBackgroundColor(40, 50, 60)
-	local joystickcount = love.joystick.getJoystickCount( )
+	local joystickCount = love.joystick.getJoystickCount( )
 	world = Bump.newWorld(64)
 	players = {}
-	for i = 1, joystickcount, 1 do players[i] = Player:new(i) end
+	for i = 1, joystickCount, 1 do players[i] = Player:new(i) end
 	carrier = players[1]
 	carrierTime = 0
 	platforms = {}
