@@ -25,14 +25,14 @@ function love.load()
 
 	music = love.audio.newSource("sfx/yakety-sax.mp3")
 	music:setLooping(true)
-	-- music:play()
+	music:play()
 end
 
 function love.update(dt)
 	Flux.update(dt)
 	carrierTime = carrierTime + dt
 	table.foreach(players, function (i)
-		players[i]:update()
+		players[i]:update(dt)
 	end)
 
 	timer:update(dt)
