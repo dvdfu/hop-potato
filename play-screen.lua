@@ -31,6 +31,12 @@ function PlayScreen:update(dt)
 	end)
 	table.foreach(players, function (i)
 		players[i]:update(dt)
+
+		if players[i].timer:getTime() <= 0 and players[i].controller:startButton() then
+			screens:exitScreen(self)
+			screens:enterScreen(PlayScreen)
+		end
+
 	end)
 	potato:update(dt)
 end
@@ -47,6 +53,21 @@ function PlayScreen:draw()
 
 	table.foreach(players, function (i)
 		players[i]:draw()
+
+		if players[i].timer:getTime() <= 0 then
+			font = love.graphics.newFont(36)
+			love.graphics.setFont(font)
+
+			love.graphics.printf("PLAYER " .. i .. " GOT REKT!", 0, love.window.getHeight() / 2 - 50, love.window.getWidth(), "center")
+
+			font = love.graphics.newFont(24)
+			love.graphics.setFont(font)	
+
+			love.graphics.printf("(Press start to play again)", 0, love.window.getHeight() / 2 + 50, love.window.getWidth(), "center")
+
+			font = love.graphics.newFont(14)
+			love.graphics.setFont(font)
+		end
 	end)
 	potato:draw()
 end
