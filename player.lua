@@ -83,7 +83,7 @@ function Player:update(dt)
 
 	self.sprite:update(dt)
 
-	if carrier == self and not self.respawning then
+	if owner == self and not self.respawning then
 		self.timer:update(dt)
 	end
 	
@@ -132,6 +132,7 @@ end
 
 function Player:respawn()
 	carrier = self
+	owner = carrier
 	self.respawnTime = 2
 	self.x = math.random(0, love.window.getWidth())
 	self.y = 20

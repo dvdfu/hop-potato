@@ -14,6 +14,7 @@ function PlayScreen:initialize()
 	players = {}
 	for i = 1, love.joystick.getJoystickCount(), 1 do players[i] = Player:new(i) end
 	carrier = players[1]
+	owner = carrier
 	carrierTime = 0
 	platforms = {}
 	local numPlatforms = love.graphics.getWidth() * love.graphics.getHeight() / 50000
@@ -89,7 +90,7 @@ function PlayScreen:draw()
 	love.graphics.setColor(255, 0, 0, 255)
 	love.graphics.rectangle('fill', 0, lavaLevel, love.graphics.getWidth(), love.graphics.getHeight() * 0.2)
 	love.graphics.setColor(255, 255, 255, 255)
-	-- love.graphics.draw(self.fire)
+	love.graphics.draw(self.fire)
 	love.graphics.setBlendMode('alpha')
 end
 
