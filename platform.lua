@@ -14,30 +14,23 @@ function Platform:initialize()
 
 	self.dustSprite = love.graphics.newImage('img/particle.png')
 	self.dust = love.graphics.newParticleSystem(self.dustSprite, 100)
-	self.dust:setAreaSpread('normal', 6, 0)
-	self.dust:setParticleLifetime(2, 5)
-	self.dust:setEmissionRate(50)
+	self.dust:setParticleLifetime(0.25, 0.3)
 	self.dust:setSizeVariation(0)
-	self.dust:setColors(204, 204, 204, 0.7)
+	self.dust:setColors(204, 204, 204, 204, 204, 204, 204, 204, 204, 204, 204, 204)
+	self.dust:setSpread(math.pi/4)
+	self.dust:setDirection(-math.pi / 2)
+	self.dust:setSpeed(200)
+	self.dust:setLinearAcceleration(5, 5, 5, 10)
 end
 
-	-- self.fire = love.graphics.newParticleSystem(self.fireSprite, 100)
-	-- self.fire:setAreaSpread('normal', 6, 0)
-	-- self.fire:setParticleLifetime(0.1, 0.15)
-	-- self.fire:setDirection(-math.pi / 2)
-	-- self.fire:setSpeed(160, 300)
-	-- self.fire:setColors(255, 0, 0, 255, 255, 120, 0, 255, 255, 200, 0, 255)
-	-- self.fire:setEmissionRate(200)
-	-- self.fire:setSizeVariation(0)
-
 function Platform:update(dt)
-	self.dust:setPosition(self.x, self.y)
-	self.dust:update(dt)
 	world:update(self, self.x, self.y)
+	self.dust:update(dt)
 end
 
 function Platform:draw()
 	love.graphics.rectangle('fill', self.x, self.y, self.w, 16)
+	love.graphics.draw(self.dust);
 end
 
 function Platform:move()
@@ -49,8 +42,9 @@ function Platform:move()
 	}):ease('cubicout')
 end
 
-function Platform:leaveDust()
-	love.graphics.draw(self.dust);
+function Platform:leaveDust(x, y)
+	self.dust:setPosition(x, y)
+	self.dust:emit(20)
 end
 
 return Platform
