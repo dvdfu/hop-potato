@@ -12,4 +12,23 @@ function Controller:leftAnalogMove()
 	else return 0 end
 end
 
+function Controller:rightAnalogX()
+	if self.joystick == nil then return 0 end
+	local rightx = self.joystick:getGamepadAxis('rightx') or 0
+	if math.abs(rightx) > 0.075 then return rightx
+	else return 0 end
+end
+
+function Controller:rightAnalogY()
+	if self.joystick == nil then return 0 end
+	local righty = self.joystick:getGamepadAxis('righty') or 0
+	if math.abs(righty) > 0.075 then return righty
+	else return 0 end
+end
+
+function Controller:rightBumper()
+	if self.joystick == nil then return false end
+	return self.joystick:isDown(12)
+end
+
 return Controller
