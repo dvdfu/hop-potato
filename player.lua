@@ -52,11 +52,12 @@ end
 
 function Player:collide()
 	local actualX, actualY, cols, len = world:move(self, self.x + self.vx, self.y + self.vy, type)
-	self.x, self.y = actualX, actualY
+	self.x, self.y = self.x + self.vx, self.y + self.vy
 	for i = 1, len do
 		local col = cols[i]
 		if col.other.name == 'platform' then
 			if col.normal.y == -1 and self.y + self.h - self.vy < col.other.y then
+				self.x, self.y = actualX, actualY
 				self.y = col.other.y - self.h
 				self.vy = -Player.jump_vel
 				col.other:move()
