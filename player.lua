@@ -83,7 +83,6 @@ function Player:update(dt)
 		self.timer:update(dt)
 	end
 	
-
 	self.respawning = self.respawnTime > 0
 
 	--movement
