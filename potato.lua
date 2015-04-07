@@ -18,6 +18,8 @@ function Potato:initialize()
 
 	self.name = 'potato'
 	world:add(self, self.x, self.y, 32, 32)
+
+	throw = love.audio.newSource("sfx/throw.wav")
 end
 
 --define collision properties
@@ -26,6 +28,8 @@ local type = function(item, other)
 end
 
 function Potato:collide()
+	if carrier ~= nil and carrier.respawning then end
+
 	local actualX, actualY, cols, len = world:move(self, self.x + self.vx, self.y + self.vy, type)
 	self.x, self.y = actualX, actualY
 	for i = 1, len do
@@ -48,7 +52,11 @@ function Potato:update(dt)
 
 	--follow trajectory when thrown
 	if carrier == nil then
-		self.vy = self.vy + 0.3
+		if self.vy < 20 then
+			self.vy = self.vy + 0.3
+		else
+			self.vy = 20
+		end
 		self.vx = self.vx * 0.99
 		self.x = self.x + self.vx
 		self.y = self.y + self.vy
@@ -59,11 +67,12 @@ function Potato:update(dt)
 		local xOffset = carrier.controller:rightAnalogX() * 48
 		local yOffset = carrier.controller:rightAnalogY() * 48
 		self.x, self.y = carrier.x + xOffset, carrier.y + yOffset
-		if carrier.controller:rightBumper() then
+		if carrier.controller:rightBumper() and not carrier.respawning and xOffset * yOffset ~= 0 then
 			carrier = nil
 			local angle = math.atan2(yOffset, xOffset)
 			self.vx = math.cos(angle) * 8
 			self.vy = math.sin(angle) * 8
+			throw:play()
 		end
 	end
 
