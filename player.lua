@@ -40,6 +40,7 @@ function Player:collide()
 			if col.normal.y == -1 and self.y + self.h - self.vy < col.other.y then
 				self.y = col.other.y - self.h
 				self.vy = -Player.jump_vel
+				col.other:leaveDust()
 				col.other:move()
 			end
 		end
