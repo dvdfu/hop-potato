@@ -30,6 +30,10 @@ function Player:initialize(num)
 		self.left = 'left'
 		self.right = 'right'
 		self.colorG = 255
+	elseif num == 3 then
+		self.left = 'j'
+		self.right = 'l'
+		self.colorB = 255
 	end
 
 	self.name = 'player'
@@ -99,7 +103,7 @@ function Player:update(dt)
 
 	--wrap around room
 	local nocol = false --to skip collision checking
-	if self.y > love.window.getHeight() then
+	if self.y > lavaLevel then
 		self:respawn()
 		nocol = true
 	end
