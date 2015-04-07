@@ -9,9 +9,9 @@ function Timer:initialize()
 end
 
 function Timer:update(dt)
-	if self.time - dt <= 0 then 
+	if self.time - dt <= 0 then
 		self.time = 0
-	else 
+	else
 		self.time = self.time - dt
 	end
 end

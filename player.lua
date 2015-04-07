@@ -60,6 +60,7 @@ function Player:collide()
 				self.x, self.y = actualX, actualY
 				self.y = col.other.y - self.h
 				self.vy = -Player.jump_vel
+				col.other:leaveDust(self.x + 16, self.y + 32)
 				col.other:move()
 				jump:play()
 			end
