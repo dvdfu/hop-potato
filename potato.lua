@@ -52,7 +52,11 @@ function Potato:update(dt)
 
 	--follow trajectory when thrown
 	if carrier == nil then
-		self.vy = self.vy + 0.3
+		if self.vy < 20 then
+			self.vy = self.vy + 0.3
+		else
+			self.vy = 20
+		end
 		self.vx = self.vx * 0.99
 		self.x = self.x + self.vx
 		self.y = self.y + self.vy

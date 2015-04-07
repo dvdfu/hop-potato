@@ -26,7 +26,7 @@ end
 
 function screens:exitScreen()
 	if screenNum > 0 then
-		screens.remove(screenNum)
+		screens[screenNum] = nil
 		screenNum = screenNum - 1
 	end
 end

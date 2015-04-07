@@ -44,6 +44,9 @@ end
 
 --define collision properties
 local type = function(item, other)
+	-- if other.name == 'platform' then
+	-- 	return 'slide'
+	-- end
 	return 'cross'
 end
 
@@ -82,10 +85,11 @@ function Player:update(dt)
 
 	--control falling speed
 	if self.respawning then
-		self.y = 20
 		self.respawnTime = self.respawnTime - dt
 	elseif self.vy < 20 then
-		self.vy = self.vy + Player.gravity
+		if not self.respawning then
+			self.vy = self.vy + Player.gravity
+		end
 	else
 		self.vy = 20
 	end
@@ -94,13 +98,14 @@ function Player:update(dt)
 	local nocol = false --to skip collision checking
 	if self.y > love.window.getHeight() then
 		self:respawn()
+		nocol = true
 	end
 	if self.x > love.window.getWidth() then
 		self.x = -self.w
-		nocol = true;
+		nocol = true
 	elseif self.x < -self.w then
 		self.x = love.window.getWidth()
-		nocol = true;
+		nocol = true
 	end
 
 	--collision
