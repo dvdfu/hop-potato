@@ -9,15 +9,15 @@ function Timer:initialize()
 end
 
 function Timer:update(dt)
-	if self.time - dt <= 0 then 
+	if self.time - dt <= 0 then
 		self.time = 0
-	else 
+	else
 		self.time = self.time - dt
 	end
 end
 
 function Timer:draw(x, y, textWidth)
-	love.graphics.print(string.format("%i", self.time), x, y)
+	love.graphics.printf(string.format("%i", self.time), x, y, 25, "center")
 end
 
 function Timer:getTime()

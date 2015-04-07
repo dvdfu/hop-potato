@@ -19,7 +19,10 @@ function Potato:initialize()
 	self.name = 'potato'
 	world:add(self, self.x, self.y, 32, 32)
 
+	--resources
 	throw = love.audio.newSource("sfx/throw.wav")
+	jump = love.audio.newSource("sfx/jump.wav")
+>>>>>>> 9c5cb01b6182947c0944ba4ceb3228d6b9a49c20
 end
 
 --define collision properties
@@ -41,6 +44,7 @@ function Potato:collide()
 			self.y = col.other.y - 32
 			self.vy = -8
 			col.other:move()
+			jump:play()
 		end
 	end
 end
