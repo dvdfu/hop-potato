@@ -17,14 +17,6 @@ function Player:initialize(num)
 
 	self.controller = Controller:new(num)
 
-	if num == 1 then
-		self.left = 'a'
-		self.right = 'd'
-	elseif num == 2 then
-		self.left = 'left'
-		self.right = 'right'
-	end
-
 	local img = love.graphics.newImage('img/player'..num..'.png')
 	self.sprite = newAnimation(img, 16, 16, 0.5, 0)
 
@@ -71,13 +63,7 @@ function Player:update(dt)
 	self.sprite:update(dt)
 
 	--movement
-	if love.keyboard.isDown(self.left) then --keyboard fallback
-		self.vx = -Player.move_vel
-	elseif love.keyboard.isDown(self.right) then
-		self.vx = Player.move_vel
-	else
-		self.vx = self.controller:leftAnalogMove() * Player.move_vel
-	end
+	self.vx = self.controller:leftAnalogMove() * Player.move_vel
 
 	--control falling speed
 	if self.vy < 20 then
