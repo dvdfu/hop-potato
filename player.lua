@@ -1,5 +1,6 @@
 require 'lib.AnAL'
 Controller = require 'controller'
+Timer = require 'timer'
 Player = Class('Player')
 
 Player.static.move_vel = 4
@@ -8,28 +9,37 @@ Player.static.gravity = 0.2
 
 function Player:initialize(num)
 	self.num = num
-	self.x = math.random(0, 500)
-	self.y = math.random(0, 500)
 	self.vx = 0
 	self.vy = 0
 	self.w = 32
 	self.h = 32
 
+	self:respawn()
 	self.controller = Controller:new(num)
-
-	local img = love.graphics.newImage('img/player'..num..'.png')
-	self.sprite = newAnimation(img, 16, 16, 0.5, 0)
-
-	--name for collision identification
-	self.name = 'player'
-	--world is defined in main.lua
-	world:add(self, self.x, self.y, self.w, self.h)
-
-	jump = love.audio.newSource("sfx/jump.wav")
-
 	self.timer = Timer:new()
 
-	self.respawnTime = 2
+	--user-specific data
+	self.colorR = 100
+	self.colorG = 100
+	self.colorB = 100
+	if num == 1 then
+		self.left = 'a'
+		self.right = 'd'
+		self.colorR = 255
+	elseif num == 2 then
+		self.left = 'left'
+		self.right = 'right'
+		self.colorG = 255
+	end
+
+	self.name = 'player'
+	world:add(self, self.x, self.y, self.w, self.h)
+
+	--resources
+	jump = love.audio.newSource("sfx/jump.wav")
+	local img = love.graphics.newImage('img/player.png')
+	self.sprite = newAnimation(img, 16, 16, 0.5, 0)
+
 end
 
 --define collision properties
@@ -63,14 +73,15 @@ end
 function Player:update(dt)
 
 	self.sprite:update(dt)
+	self.timer:update(dt)
 
 	--movement
 	self.vx = self.controller:leftAnalogMove() * Player.move_vel
 
-	self.respawn = self.respawnTime > 0
+	self.respawning = self.respawnTime > 0
 
 	--control falling speed
-	if self.respawn then
+	if self.respawning then
 		self.y = 20
 		self.respawnTime = self.respawnTime - dt
 	elseif self.vy < 20 then
@@ -82,10 +93,7 @@ function Player:update(dt)
 	--wrap around room
 	local nocol = false --to skip collision checking
 	if self.y > love.window.getHeight() then
-		carrier = self
-		self.respawnTime = 2
-		self.x = math.random(0, love.window.getWidth())
-		self.vy = 0
+		self:respawn()
 	end
 	if self.x > love.window.getWidth() then
 		self.x = -self.w
@@ -104,12 +112,20 @@ function Player:update(dt)
 end
 
 function Player:draw()
-	love.graphics.rectangle('fill', self.x, self.y, self.w, self.h)
+	love.graphics.setColor(self.colorR, self.colorG, self.colorB, 255)
 	self.sprite:draw(self.x, self.y, 0, 2, 2)
-
+	love.graphics.setColor(255, 255, 255, 255)
 	if carrier == self then
-		timer:draw(self.x, self.y - 25, self.w)
+		self.timer:draw(self.x, self.y - 25)
 	end
+end
+
+function Player:respawn()
+	carrier = self
+	self.respawnTime = 2
+	self.x = math.random(0, love.window.getWidth())
+	self.y = 20
+	self.vy = 0
 end
 
 return Player
