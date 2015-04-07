@@ -1,5 +1,4 @@
-class = require 'lib.middleclass'
-Platform = class('Platform')
+Platform = Class('Platform')
 
 --define collision properties
 local type = function(item, other)
