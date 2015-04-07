@@ -22,7 +22,6 @@ function Potato:initialize()
 	--resources
 	throw = love.audio.newSource("sfx/throw.wav")
 	jump = love.audio.newSource("sfx/jump.wav")
->>>>>>> 9c5cb01b6182947c0944ba4ceb3228d6b9a49c20
 end
 
 --define collision properties
