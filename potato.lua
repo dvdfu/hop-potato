@@ -52,7 +52,11 @@ function Potato:update(dt)
 
 	--follow trajectory when thrown
 	if carrier == nil then
-		self.vy = self.vy + 0.3
+		if self.vy < 20 then
+			self.vy = self.vy + 0.3
+		else
+			self.vy = 20
+		end
 		self.vx = self.vx * 0.99
 		self.x = self.x + self.vx
 		self.y = self.y + self.vy
@@ -63,8 +67,7 @@ function Potato:update(dt)
 		local xOffset = carrier.controller:rightAnalogX() * 48
 		local yOffset = carrier.controller:rightAnalogY() * 48
 		self.x, self.y = carrier.x + xOffset, carrier.y + yOffset
-		
-		if carrier.controller:rightBumper() and not carrier.respawning then
+		if carrier.controller:rightBumper() and not carrier.respawning and xOffset * yOffset ~= 0 then
 			carrier = nil
 			local angle = math.atan2(yOffset, xOffset)
 			self.vx = math.cos(angle) * 8

@@ -5,23 +5,23 @@ function Timer:initialize()
 	font = love.graphics.newFont(14)
 	love.graphics.setFont(font)
 
-	time = 30
+	self.time = 30
 end
 
 function Timer:update(dt)
-	if time - dt <= 0 then 
-		time = 0
+	if self.time - dt <= 0 then 
+		self.time = 0
 	else 
-		time = time - dt
+		self.time = self.time - dt
 	end
 end
 
 function Timer:draw(x, y, textWidth)
-	love.graphics.printf(string.format("%.0f", time), x, y, textWidth, 'center')
+	love.graphics.print(string.format("%i", self.time), x, y)
 end
 
 function Timer:getTime()
-	return time
+	return self.time
 end
 
 return Timer

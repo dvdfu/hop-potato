@@ -1,4 +1,4 @@
-Controller = class('Controller')
+Controller = Class('Controller')
 
 function Controller:initialize(i)
 	self.controller = i
@@ -37,7 +37,7 @@ end
 
 function Controller:rightBumper()
 	if self.joystick == nil then return false end
-	return self.joystick:isDown(self.rBumper)
+	return self.joystick:isDown(self.rBumper or 5)
 end
 
 return Controller
