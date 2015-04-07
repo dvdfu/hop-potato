@@ -9,12 +9,12 @@ function Potato:initialize()
 	self.fireSprite = love.graphics.newImage('img/particle.png')
 	self.fire = love.graphics.newParticleSystem(self.fireSprite, 100)
 	self.fire:setAreaSpread('normal', 6, 0)
-	self.fire:setParticleLifetime(0.1, 0.3)
+	self.fire:setParticleLifetime(0.1, 0.15)
 	self.fire:setDirection(-math.pi / 2)
 	self.fire:setSpeed(160, 300)
-	self.fire:setColors(255, 0, 0, 255, 255, 180, 0, 255, 255, 230, 0, 255, 160, 160, 160, 255)
+	self.fire:setColors(255, 0, 0, 255, 255, 120, 0, 255, 255, 200, 0, 255)
 	self.fire:setEmissionRate(200)
-	self.fire:setSizeVariation(1)
+	self.fire:setSizeVariation(0)
 
 	self.name = 'potato'
 	world:add(self, self.x, self.y, 32, 32)
@@ -90,7 +90,9 @@ function Potato:update(dt)
 end
 
 function Potato:draw()
+	love.graphics.setBlendMode('additive')
 	love.graphics.draw(self.fire)
+	love.graphics.setBlendMode('alpha')
 	love.graphics.draw(self.sprite, self.x, self.y, 0, 2, 2)
 end
 

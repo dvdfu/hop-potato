@@ -29,6 +29,9 @@ end
 function love.update(dt)
 	Flux.update(dt)
 	carrierTime = carrierTime + dt
+	table.foreach(platforms, function (i)
+		platforms[i]:update(dt)
+	end)
 	table.foreach(players, function (i)
 		players[i]:update(dt)
 	end)
