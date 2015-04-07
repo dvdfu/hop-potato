@@ -18,6 +18,8 @@ function Potato:initialize()
 
 	self.name = 'potato'
 	world:add(self, self.x, self.y, 32, 32)
+
+	throw = love.audio.newSource("sfx/throw.wav")
 end
 
 --define collision properties
@@ -64,6 +66,7 @@ function Potato:update(dt)
 			local angle = math.atan2(yOffset, xOffset)
 			self.vx = math.cos(angle) * 8
 			self.vy = math.sin(angle) * 8
+			throw:play()
 		end
 	end
 

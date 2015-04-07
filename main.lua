@@ -53,6 +53,6 @@ function love.draw()
 		players[i]:draw()
 	end)
 	potato:draw()
-	timer:draw()
+	-- timer:draw(0, 25, love.graphics.getWidth())
 	love.graphics.print(string.format('%.3f', carrierTime), 80, 80)
 end
