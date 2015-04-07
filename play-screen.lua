@@ -21,6 +21,10 @@ function PlayScreen:initialize()
 	-- music:play()
 
 	print(love.joystick.getJoystickCount())
+
+	gameOverFont = love.graphics.newFont(36)
+	subheadingFont = love.graphics.newFont(24)
+	defaultFont = love.graphics.newFont(14)
 end
 
 function PlayScreen:update(dt)
@@ -33,7 +37,7 @@ function PlayScreen:update(dt)
 		players[i]:update(dt)
 
 		if players[i].timer:getTime() <= 0 and players[i].controller:startButton() then
-			screens:exitScreen(self)
+			screens:exitScreen()
 			screens:enterScreen(PlayScreen)
 		end
 
@@ -55,18 +59,13 @@ function PlayScreen:draw()
 		players[i]:draw()
 
 		if players[i].timer:getTime() <= 0 then
-			font = love.graphics.newFont(36)
-			love.graphics.setFont(font)
-
+			love.graphics.setFont(gameOverFont)
 			love.graphics.printf("PLAYER " .. i .. " GOT REKT!", 0, love.window.getHeight() / 2 - 50, love.window.getWidth(), "center")
 
-			font = love.graphics.newFont(24)
 			love.graphics.setFont(font)	
-
 			love.graphics.printf("(Press start to play again)", 0, love.window.getHeight() / 2 + 50, love.window.getWidth(), "center")
 
-			font = love.graphics.newFont(14)
-			love.graphics.setFont(font)
+			love.graphics.setFont(defaultFont)
 		end
 	end)
 	potato:draw()
