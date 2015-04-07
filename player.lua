@@ -6,6 +6,8 @@ Player = class('Player')
 local type = function(item, other)
 	if other.name == 'platform' then
 		return 'cross'
+	elseif other.name == 'player' then
+		return 'cross'
 	else
 		return 'slide'
 	end
@@ -71,10 +73,15 @@ function Player:update()
 			if col.normal.y == -1 and self.y + self.h - self.vy < col.other.y then
 				self.y = col.other.y - self.h
 				self.vy = -self.jumpVel
+				col.other:move()
 			end
 		end
 		if col.other.name == 'player' then
-			if col.normal.y == -1 then
+			if carrier == self and carrierTime > 1 then
+				carrier = col.other
+				carrierTime = 0
+			end
+			if col.normal.y == -1 and self.y + self.h - self.vy < col.other.y then
 				self.y = col.other.y - self.h
 				self.vy = -self.jumpVel
 				col.other.vy = 0
@@ -86,6 +93,10 @@ end
 function Player:draw()
 	love.graphics.setColor(255, 0, 0, 255)
 	love.graphics.rectangle('fill', self.x, self.y, self.w, self.h)
+	if carrier == self then
+		love.graphics.setColor(255, 200, 0, 255)
+		love.graphics.rectangle('fill', self.x, self.y - 8, self.w, 8)
+	end
 	love.graphics.setColor(255, 255, 255, 255)
 end
 

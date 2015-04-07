@@ -1,4 +1,5 @@
 Bump = require 'lib.bump'
+Flux = require 'lib.flux'
 Platform = require 'platform'
 Timer = require 'timer'
 Player = require 'player'
@@ -13,12 +14,11 @@ function love.load()
 	for i = 1, 2, 1 do
 		players[i] = Player:new(i)
 	end
+	carrier = players[1]
+	carrierTime = 0
 	platforms = {}
-	for i = 0, 20, 1 do
-		local width = math.random(60, 100)
-		local x = math.random(0, love.graphics.getWidth() - width)
-		local y = math.random(100, love.graphics.getHeight() - 16)
-		platforms[i] = Platform:new(x, y, width)
+	for i = 0, 10, 1 do
+		platforms[i] = Platform:new()
 	end
 
 	timer = Timer:new()
@@ -29,6 +29,8 @@ function love.load()
 end
 
 function love.update(dt)
+	Flux.update(dt)
+	carrierTime = carrierTime + dt
 	table.foreach(players, function (i)
 		players[i]:update()
 	end)
@@ -45,4 +47,5 @@ function love.draw()
 		players[i]:draw()
 	end)
 	timer:draw()
+	love.graphics.print(string.format('%.3f', carrierTime), 80, 80)
 end
