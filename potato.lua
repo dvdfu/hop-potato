@@ -38,6 +38,7 @@ function Potato:collide()
 		local col = cols[i]
 		if col.other.name == 'player' and col.other ~= carrier and carrierTime > 1 then
 			carrier = col.other
+			owner = carrier
 			carrierTime = 0
 		elseif carrier == nil and col.other.name == 'platform' and col.normal.y == -1 then
 			self.y = col.other.y - 32
@@ -70,8 +71,8 @@ function Potato:update(dt)
 		local xOffset = carrier.controller:rightAnalogX() * 48
 		local yOffset = carrier.controller:rightAnalogY() * 48
 		self.x, self.y = carrier.x + xOffset, carrier.y + yOffset
-		nocol = true
 		if carrier.controller:rightBumper() and not carrier.respawning and xOffset * yOffset ~= 0 then
+			nocol = true
 			carrier = nil
 			local angle = math.atan2(yOffset, xOffset)
 			self.vx = math.cos(angle) * 18
@@ -82,7 +83,7 @@ function Potato:update(dt)
 
 	--wrap around room
 	if self.y > lavaLevel then
-		self.y = -32
+		carrier = owner
 		nocol = true;
 	end
 	if self.x > love.window.getWidth() then
