@@ -8,15 +8,12 @@ Player.static.gravity = 0.2
 
 function Player:initialize(num)
 	self.num = num
-	self.x = math.random(0, 500)
-	self.y = 20
-
-	self:respawn()
-
 	self.vx = 0
 	self.vy = 0
 	self.w = 32
 	self.h = 32
+
+	self:respawn()
 
 	self.controller = Controller:new(num)
 
@@ -31,8 +28,6 @@ function Player:initialize(num)
 	jump = love.audio.newSource("sfx/jump.wav")
 
 	self.timer = Timer:new()
-
-	self.respawnTime = 0
 end
 
 --define collision properties
@@ -116,6 +111,7 @@ function Player:respawn()
 	carrier = self
 	self.respawnTime = 2
 	self.x = math.random(0, love.window.getWidth())
+	self.y = 20
 	self.vy = 0
 end
 
