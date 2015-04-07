@@ -41,6 +41,7 @@ function Player:initialize(num)
 
 	--resources
 	jump = love.audio.newSource("sfx/jump.wav")
+	death = love.audio.newSource("sfx/death.wav")
 	local img = love.graphics.newImage('img/player.png')
 	self.sprite = newAnimation(img, 16, 16, 0.5, 0)
 
@@ -104,6 +105,7 @@ function Player:update(dt)
 	--wrap around room
 	local nocol = false --to skip collision checking
 	if self.y > lavaLevel then
+		death:play()
 		self:respawn()
 		nocol = true
 	end
