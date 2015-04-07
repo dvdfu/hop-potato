@@ -67,13 +67,10 @@ function Player:update(dt)
 	--movement
 	self.vx = self.controller:leftAnalogMove() * Player.move_vel
 
-	if self.respawnTime <= 0 then
-		self.respawn = false
-		self.respawnTime = 2
-	end
+	self.respawn = self.respawnTime > 0
 
 	--control falling speed
-	if self.respawn == true then
+	if self.respawn then
 		self.y = 20
 		self.respawnTime = self.respawnTime - dt
 	elseif self.vy < 20 then
@@ -86,7 +83,6 @@ function Player:update(dt)
 	local nocol = false --to skip collision checking
 	if self.y > love.window.getHeight() then
 		carrier = self
-		self.respawn = true
 		self.respawnTime = 2
 		self.x = math.random(0, love.window.getWidth())
 		self.vy = 0
