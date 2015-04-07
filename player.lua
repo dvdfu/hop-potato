@@ -32,6 +32,10 @@ function Player:initialize(num)
 	self.name = 'player'
 	--world is defined in main.lua
 	world:add(self, self.x, self.y, self.w, self.h)
+
+	jump = love.audio.newSource("sfx/jump.wav")
+
+	timer = Timer:new()
 end
 
 --define collision properties
@@ -49,6 +53,7 @@ function Player:collide()
 				self.y = col.other.y - self.h
 				self.vy = -Player.jump_vel
 				col.other:move()
+				jump:play()
 			end
 		end
 		if col.other.name == 'player' then
@@ -106,6 +111,10 @@ end
 function Player:draw()
 	love.graphics.rectangle('fill', self.x, self.y, self.w, self.h)
 	self.sprite:draw(self.x, self.y, 0, 2, 2)
+
+	if carrier == self then
+		timer:draw(self.x, self.y - 25, self.w)
+	end
 end
 
 return Player
