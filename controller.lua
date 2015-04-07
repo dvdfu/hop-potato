@@ -6,8 +6,6 @@ function Controller:initialize(i)
 	self.inputType, self.rBumper = self.joystick:getGamepadMapping('rightshoulder')
 	self.canVibrate = self.joystick:isVibrationSupported()
 	self.id = self.joystick:getID()
-	print()
-
 	if self.canVibrate then
 		self.left, self.right = self.joystick:getVibration( )
 	else
