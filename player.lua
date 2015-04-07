@@ -28,6 +28,8 @@ function Player:initialize(num)
 	jump = love.audio.newSource("sfx/jump.wav")
 
 	self.timer = Timer:new()
+
+	self.respawnTime = 2
 end
 
 --define collision properties
@@ -65,19 +67,29 @@ function Player:update(dt)
 	--movement
 	self.vx = self.controller:leftAnalogMove() * Player.move_vel
 
+	if self.respawnTime <= 0 then
+		self.respawn = false
+		self.respawnTime = 2
+	end
+
 	--control falling speed
-	if self.vy < 20 then
+	if self.respawn == true then
+		self.y = 20
+		self.respawnTime = self.respawnTime - dt
+	elseif self.vy < 20 then
 		self.vy = self.vy + Player.gravity
 	else
 		self.vy = 20
 	end
 
 	--wrap around room
-	local nocol = false--to skip collision checking
+	local nocol = false --to skip collision checking
 	if self.y > love.window.getHeight() then
-		self.y = -self.h
-		nocol = true;
 		carrier = self
+		self.respawn = true
+		self.respawnTime = 2
+		self.x = math.random(0, love.window.getWidth())
+		self.vy = 0
 	end
 	if self.x > love.window.getWidth() then
 		self.x = -self.w
