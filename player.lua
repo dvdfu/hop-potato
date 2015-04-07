@@ -9,7 +9,10 @@ Player.static.gravity = 0.2
 function Player:initialize(num)
 	self.num = num
 	self.x = math.random(0, 500)
-	self.y = math.random(0, 500)
+	self.y = 20
+
+	self:respawn()
+
 	self.vx = 0
 	self.vy = 0
 	self.w = 32
@@ -29,7 +32,7 @@ function Player:initialize(num)
 
 	self.timer = Timer:new()
 
-	self.respawnTime = 2
+	self.respawnTime = 0
 end
 
 --define collision properties
@@ -67,10 +70,10 @@ function Player:update(dt)
 	--movement
 	self.vx = self.controller:leftAnalogMove() * Player.move_vel
 
-	self.respawn = self.respawnTime > 0
+	self.respawning = self.respawnTime > 0
 
 	--control falling speed
-	if self.respawn then
+	if self.respawning then
 		self.y = 20
 		self.respawnTime = self.respawnTime - dt
 	elseif self.vy < 20 then
@@ -82,10 +85,7 @@ function Player:update(dt)
 	--wrap around room
 	local nocol = false --to skip collision checking
 	if self.y > love.window.getHeight() then
-		carrier = self
-		self.respawnTime = 2
-		self.x = math.random(0, love.window.getWidth())
-		self.vy = 0
+		self:respawn()
 	end
 	if self.x > love.window.getWidth() then
 		self.x = -self.w
@@ -110,6 +110,13 @@ function Player:draw()
 	if carrier == self then
 		timer:draw(self.x, self.y - 25, self.w)
 	end
+end
+
+function Player:respawn()
+	carrier = self
+	self.respawnTime = 2
+	self.x = math.random(0, love.window.getWidth())
+	self.vy = 0
 end
 
 return Player
