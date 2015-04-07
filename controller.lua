@@ -6,8 +6,6 @@ function Controller:initialize(i)
 	self.inputtype, self.rbumper = self.joystick:getGamepadMapping('rightshoulder')
 	self.vibration = self.joystick:isVibrationSupported()
 	self.id = self.joystick:getID()
-	print(self.joystick:getID())
-	print(self.joystick:getGamepadMapping('rightshoulder'))
 end
 
 function Controller:leftAnalogMove()
