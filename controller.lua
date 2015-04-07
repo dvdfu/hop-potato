@@ -8,9 +8,9 @@ function Controller:initialize(i)
 	self.id = self.joystick:getID()
 
 	if self.canVibrate then
-		left, right = self.joystick:getVibration( )
+		self.left, self.right = self.joystick:getVibration( )
 	else
-		left, right = nil
+		self.left, self.right = nil
 	end
 end
 
