@@ -78,7 +78,11 @@ end
 function Player:update(dt)
 
 	self.sprite:update(dt)
-	self.timer:update(dt)
+
+	if carrier == self and not self.respawning then
+		self.timer:update(dt)
+	end
+	
 	self.respawning = self.respawnTime > 0
 
 	--movement
@@ -119,9 +123,7 @@ function Player:draw()
 	love.graphics.setColor(self.colorR, self.colorG, self.colorB, 255)
 	self.sprite:draw(self.x, self.y, 0, 2, 2)
 	love.graphics.setColor(255, 255, 255, 255)
-	if carrier == self then
-		self.timer:draw(self.x, self.y - 25)
-	end
+	self.timer:draw(self.x, self.y - 25, 30)
 end
 
 function Player:respawn()

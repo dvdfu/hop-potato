@@ -14,13 +14,13 @@ function Platform:initialize()
 
 	self.dustSprite = love.graphics.newImage('img/particle.png')
 	self.dust = love.graphics.newParticleSystem(self.dustSprite, 100)
-	self.dust:setParticleLifetime(0.25, 0.3)
-	self.dust:setSizeVariation(0)
-	self.dust:setColors(204, 204, 204, 204, 204, 204, 204, 204, 204, 204, 204, 204)
-	self.dust:setSpread(math.pi/4)
+	self.dust:setParticleLifetime(0.2, 0.5)
+	self.dust:setColors(160, 160, 160, 255, 160, 160, 160, 255, 160, 160, 160, 255)
+	self.dust:setAreaSpread('normal', 6, 0)
+	self.dust:setSpread(math.pi / 2)
 	self.dust:setDirection(-math.pi / 2)
-	self.dust:setSpeed(200)
-	self.dust:setLinearAcceleration(5, 5, 5, 10)
+	self.dust:setSpeed(160)
+	self.dust:setLinearAcceleration(0, 200, 0, 500)
 end
 
 function Platform:update(dt)
@@ -44,7 +44,7 @@ end
 
 function Platform:leaveDust(x, y)
 	self.dust:setPosition(x, y)
-	self.dust:emit(20)
+	self.dust:emit(10)
 end
 
 return Platform
