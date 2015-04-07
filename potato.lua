@@ -28,7 +28,7 @@ local type = function(item, other)
 end
 
 function Potato:collide()
-	if carrier ~= nil and carrier.respawn then end
+	if carrier ~= nil and carrier.respawning then end
 
 	local actualX, actualY, cols, len = world:move(self, self.x + self.vx, self.y + self.vy, type)
 	self.x, self.y = actualX, actualY
@@ -64,7 +64,7 @@ function Potato:update(dt)
 		local yOffset = carrier.controller:rightAnalogY() * 48
 		self.x, self.y = carrier.x + xOffset, carrier.y + yOffset
 		
-		if carrier.controller:rightBumper() and not carrier.respawn then
+		if carrier.controller:rightBumper() and not carrier.respawning then
 			carrier = nil
 			local angle = math.atan2(yOffset, xOffset)
 			self.vx = math.cos(angle) * 8
