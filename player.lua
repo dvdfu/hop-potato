@@ -27,7 +27,7 @@ function Player:initialize(num)
 
 	jump = love.audio.newSource("sfx/jump.wav")
 
-	timer = Timer:new()
+	self.timer = Timer:new()
 end
 
 --define collision properties
@@ -77,6 +77,7 @@ function Player:update(dt)
 	if self.y > love.window.getHeight() then
 		self.y = -self.h
 		nocol = true;
+		carrier = self
 	end
 	if self.x > love.window.getWidth() then
 		self.x = -self.w
