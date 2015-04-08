@@ -65,7 +65,7 @@ function Potato:update(dt)
 		else
 			self.vy = 20
 		end
-		self.vx = self.vx * 0.99
+		self.vx = self.vx * 0.98
 
 	--move potato and check for throws
 	else
@@ -78,8 +78,8 @@ function Potato:update(dt)
 			nocol = true
 			carrier = nil
 			local angle = math.atan2(yOffset, xOffset)
-			self.vx = math.cos(angle) * 18
-			self.vy = math.sin(angle) * 18
+			self.vx = math.cos(angle) * 25
+			self.vy = math.sin(angle) * 25
 			throw:play()
 		end
 	end
@@ -93,10 +93,10 @@ function Potato:update(dt)
 		nocol = true;
 	end
 	if self.x > love.window.getWidth() then
-		self.x = 0
+		self.x = self.x - love.window.getWidth()
 		nocol = true;
 	elseif self.x < 0 then
-		self.x = love.window.getWidth()
+		self.x = self.x + love.window.getWidth()
 		nocol = true;
 	end
 
