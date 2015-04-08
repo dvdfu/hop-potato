@@ -21,6 +21,7 @@ function Player:initialize(num)
 	self.injuryFlicker = 0
 
 	self.alive = true
+	self.removed = false
 
 	--user-specific data
 	self.colorR = 100
@@ -85,17 +86,13 @@ function Player:collide()
 end
 
 function Player:update(dt)
-	if self.alive == false then return end
+	if not self.alive then return end
 
 	self.sprite:update(dt)
 
 	if owner == self and not self.respawning then
 		self.timer:update(dt)
 	end
-
-	--checks for death
-	if self.timer:getTime() <= 0 then
-		self.alive = false
 
 	if self.injured then
 		self.injuryFlicker = self.injuryFlicker + 1
@@ -155,10 +152,20 @@ function Player:update(dt)
 	else
 		self:collide()
 	end
+
+	--checks for death
+	if self.timer:getTime() <= 0 then
+		self.alive = false
+
+		if not self.removed then
+			world:remove(self)
+			self.removed = true
+		end
+	end
 end
 
 function Player:draw()
-	if self.alive == false then return end
+	if not self.alive then return end
 
 	if not self.injured or self.injuryFlicker % 4 < 2 then
 		if owner == self then
