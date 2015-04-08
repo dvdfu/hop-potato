@@ -9,9 +9,9 @@ function love.load()
 	love.graphics.setDefaultFilter('nearest', 'nearest')
 	love.graphics.setBackgroundColor(40, 40, 40)
 
-	font = love.graphics.newImageFont("img/font.png", " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/():;%&`'*#=[]\"")
+	--font = love.graphics.newImageFont("img/font.png", " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/():;%&`'*#=[]\"")
 	-- font.setWidth(4)
-	love.graphics.setFont(font)
+	--love.graphics.setFont(font)
 
 	screenNum = 0
 	screens:enterScreen(MenuScreen)
