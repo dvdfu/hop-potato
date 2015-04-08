@@ -10,6 +10,7 @@ function love.load()
 	love.graphics.setBackgroundColor(40, 40, 40)
 
 	font = love.graphics.newImageFont("img/font.png", " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/():;%&`'*#=[]\"")
+	-- font.setWidth(4)
 	love.graphics.setFont(font)
 
 	screenNum = 0
@@ -34,7 +35,13 @@ end
 
 function screens:exitScreen()
 	if screenNum > 0 then
+		screens[screenNum]:onClose()
 		screens[screenNum] = nil
 		screenNum = screenNum - 1
 	end
+end
+
+function screens:changeScreen(screen)
+	screens:exitScreen()
+	screens:enterScreen(screen)
 end

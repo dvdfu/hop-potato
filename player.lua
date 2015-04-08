@@ -4,7 +4,7 @@ Timer = require 'timer'
 Player = Class('Player')
 
 Player.static.move_vel = 4
-Player.static.jump_vel = 8
+Player.static.jump_vel = 10
 Player.static.gravity = 0.2
 
 function Player:initialize(num)
@@ -16,7 +16,7 @@ function Player:initialize(num)
 
 	self:respawn()
 	self.controller = Controller:new(num)
-	self.timer = Timer:new()
+	self.timer = Timer:new(10)
 
 	--user-specific data
 	self.colorR = 100
@@ -104,15 +104,18 @@ function Player:update(dt)
 
 	--wrap around room
 	local nocol = false --to skip collision checking
-	if self.y > lavaLevel then
+	if self.y < 0 then
+		self.y = 0
+		self.vy = 0
+	elseif self.y > lavaLevel then
 		death:play()
 		self:respawn()
 		nocol = true
 	end
 	if self.x > love.window.getWidth() then
-		self.x = -self.w
+		self.x = 0
 		nocol = true
-	elseif self.x < -self.w then
+	elseif self.x < 0 then
 		self.x = love.window.getWidth()
 		nocol = true
 	end
@@ -126,15 +129,25 @@ function Player:update(dt)
 end
 
 function Player:draw()
+	if owner == self then
+		love.graphics.setBlendMode('additive')
+		love.graphics.setColor(255, 200, 0, 255)
+		love.graphics.rectangle('fill', self.x - 2, self.y - 2, self.w + 4, self.h + 4)
+		love.graphics.rectangle('fill', self.x - 2 - love.graphics.getWidth(), self.y - 2, self.w + 4, self.h + 4)
+		love.graphics.setBlendMode('alpha')
+	end
 	love.graphics.setColor(self.colorR, self.colorG, self.colorB, 255)
 	self.sprite:draw(self.x, self.y, 0, 2, 2)
+	self.sprite:draw(self.x - love.graphics.getWidth(), self.y, 0, 2, 2)
 	love.graphics.setColor(255, 255, 255, 255)
 	self.timer:draw(self.x, self.y - 25, 30)
+	self.timer:draw(self.x - love.graphics.getWidth(), self.y - 25, 30)
 end
 
 function Player:respawn()
 	carrier = self
 	owner = carrier
+	carrierTime = 0
 	self.respawnTime = 2
 	self.x = math.random(0, love.window.getWidth())
 	self.y = 20

@@ -19,4 +19,7 @@ function MenuScreen:draw()
 	love.graphics.print(string.format('%.3f', timer), 300, 300)
 end
 
+function MenuScreen:onClose()
+end
+
 return MenuScreen

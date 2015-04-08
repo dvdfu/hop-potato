@@ -1,11 +1,11 @@
 class = require 'lib.middleclass'
 Timer = class('Timer')
 
-function Timer:initialize()
+function Timer:initialize(start)
 	font = love.graphics.newFont(14)
 	love.graphics.setFont(font)
 
-	self.time = 30
+	self.time = start
 end
 
 function Timer:update(dt)
