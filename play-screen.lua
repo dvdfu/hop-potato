@@ -6,6 +6,7 @@ Potato = require 'potato'
 
 PlayScreen = Class('PlayScreen')
 
+
 function PlayScreen:initialize()
 	--consts
 	lavaLevel = love.graphics.getHeight() * 0.8
@@ -53,10 +54,8 @@ function PlayScreen:update(dt)
 		players[i]:update(dt)
 
 		if players[i].timer:getTime() <= 0 and players[i].controller:startButton() then
-			screens:exitScreen()
-			screens:enterScreen(PlayScreen)
+			screens:changeScreen(PlayScreen)
 		end
-
 	end)
 	potato:update(dt)
 end
@@ -92,6 +91,10 @@ function PlayScreen:draw()
 	love.graphics.setColor(255, 255, 255, 255)
 	love.graphics.draw(self.fire)
 	love.graphics.setBlendMode('alpha')
+end
+
+function PlayScreen:onClose()
+	music:stop()
 end
 
 return PlayScreen
