@@ -12,10 +12,13 @@ function PlayScreen:initialize()
 
 	world = Bump.newWorld(64)
 	players = {}
-	local numPlayers = love.joystick.getJoystickCount()
-	for i = 1, numPlayers do
-		players[i] = Player:new(i)
-	end
+	local numPlayers = 0
+	table.foreach(joysticks, function (i)
+		if joysticks[i].controller ~= nil then
+			numPlayers = numPlayers + 1
+			players[numPlayers] = Player:new(i)
+		end
+	end)
 	carrier = players[math.floor(math.random(numPlayers))]
 	owner = carrier
 	carrierTime = 0
@@ -32,7 +35,7 @@ function PlayScreen:initialize()
 	gameOverFont = love.graphics.newFont(36)
 	subheadingFont = love.graphics.newFont(24)
 	defaultFont = love.graphics.newFont(14)
-	
+
 	--fire configuration
 	self.fireSprite = love.graphics.newImage('img/flame.png')
 	self.fire = love.graphics.newParticleSystem(self.fireSprite, 3000)
@@ -81,7 +84,7 @@ function PlayScreen:draw()
 			love.graphics.setFont(gameOverFont)
 			love.graphics.printf("PLAYER " .. i .. " GOT REKT!", 0, love.window.getHeight() / 2 - 50, love.window.getWidth(), "center")
 
-			love.graphics.setFont(font)	
+			love.graphics.setFont(font)
 			love.graphics.printf("(Press start to play again)", 0, love.window.getHeight() / 2 + 50, love.window.getWidth(), "center")
 
 			love.graphics.setFont(defaultFont)
