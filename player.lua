@@ -20,6 +20,8 @@ function Player:initialize(num)
 	self.injured = false
 	self.injuryFlicker = 0
 
+	self.alive = true
+
 	--user-specific data
 	self.colorR = 100
 	self.colorG = 100
@@ -98,7 +100,7 @@ function Player:collide()
 				jump:play()
 			end
 		end
-		if col.other.name == 'player' then
+		if col.other.name == 'player' and col.other.alive then
 			if col.normal.y == -1 and self.y + self.h - self.vy < col.other.y then
 				self.y = col.other.y - self.h
 				self.vy = -Player.jump_vel
@@ -109,6 +111,7 @@ function Player:collide()
 end
 
 function Player:update(dt)
+	if not self.alive then return end
 
 	self.sprite:update(dt)
 
@@ -174,9 +177,18 @@ function Player:update(dt)
 	else
 		self:collide()
 	end
+
+	--checks for death
+	if self.timer:getTime() <= 0 then
+		self.alive = false
+
+		world:remove(self)
+	end
 end
 
 function Player:draw()
+	if not self.alive then return end
+
 	if not self.injured or self.injuryFlicker % 4 < 2 then
 		if owner == self then
 			love.graphics.setBlendMode('additive')

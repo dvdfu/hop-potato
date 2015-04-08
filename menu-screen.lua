@@ -1,5 +1,4 @@
 PlayScreen = require 'play-screen'
-Controller = require 'controller'
 
 MenuScreen = Class('MenuScreen')
 
