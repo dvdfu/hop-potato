@@ -29,8 +29,10 @@ function Platform:update(dt)
 end
 
 function Platform:draw()
+	love.graphics.setColor(10, 10, 10)
 	love.graphics.rectangle('fill', self.x, self.y, self.w, 16)
 	love.graphics.draw(self.dust);
+	love.graphics.setColor(255, 255, 255)
 end
 
 function Platform:move()
