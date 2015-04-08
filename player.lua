@@ -16,7 +16,7 @@ function Player:initialize(num)
 
 	self:respawn()
 	self.controller = Controller:new(num)
-	self.timer = Timer:new(10)
+	self.timer = Timer:new(20)
 
 	--user-specific data
 	self.colorR = 100

@@ -6,15 +6,17 @@ Potato = require 'potato'
 
 PlayScreen = Class('PlayScreen')
 
-
 function PlayScreen:initialize()
 	--consts
 	lavaLevel = love.graphics.getHeight() * 0.8
 
 	world = Bump.newWorld(64)
 	players = {}
-	for i = 1, love.joystick.getJoystickCount(), 1 do players[i] = Player:new(i) end
-	carrier = players[1]
+	local numPlayers = love.joystick.getJoystickCount()
+	for i = 1, numPlayers do
+		players[i] = Player:new(i)
+	end
+	carrier = players[math.floor(math.random(numPlayers))]
 	owner = carrier
 	carrierTime = 0
 	platforms = {}
@@ -25,6 +27,7 @@ function PlayScreen:initialize()
 	music = love.audio.newSource("sfx/yakety-sax.mp3")
 	music:setLooping(true)
 	-- music:play()
+	rippleShader = love.graphics.newShader('data/ripple.glsl')
 
 	gameOverFont = love.graphics.newFont(36)
 	subheadingFont = love.graphics.newFont(24)
@@ -61,6 +64,7 @@ function PlayScreen:update(dt)
 end
 
 function PlayScreen:draw()
+	love.graphics.setShader(rippleShader)
 	table.foreach(platforms, function (i)
 		platforms[i]:draw()
 	end)
@@ -91,6 +95,7 @@ function PlayScreen:draw()
 	love.graphics.setColor(255, 255, 255, 255)
 	love.graphics.draw(self.fire)
 	love.graphics.setBlendMode('alpha')
+	love.graphics.setShader()
 end
 
 function PlayScreen:onClose()

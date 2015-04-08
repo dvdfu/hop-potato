@@ -34,7 +34,7 @@ local type = function(item, other)
 end
 
 function Potato:collide()
-	if carrier ~= nil and carrier.respawning then end
+	if carrier ~= nil and carrier.respawning then return end
 
 	local actualX, actualY, cols, len = world:move(self, self.x + self.vx, self.y + self.vy, type)
 	self.x, self.y = actualX, actualY
