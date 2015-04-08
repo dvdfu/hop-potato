@@ -4,19 +4,24 @@ Controller = require 'controller'
 MenuScreen = Class('MenuScreen')
 
 function MenuScreen:initialize()
-	self.timer = 1000
+	self.startTimer = 0
 	self.playersConfigured = false
 	self.subTitle = 'DON\'T STEP IN THE LAVA AND MAKE SURE TO GET RID OF THE POTATO'
 	self.readyText = 'Press any button to lock in...'
 	self.gameOverText = 'Game over...'
-	self.joysticks = love.joystick.getJoysticks()
-	self.jsCount = love.joystick.getJoystickCount()
-	print('jsCount ' ..self.jsCount)
-	self.joystickControllers = {}
-	self.joysticksReady = {}
+
+	joysticks = {}
 	for i=1,8 do
-		self.joysticksReady[i] = false
+		joysticks[i] = { ready = false, controller = nil, joystick = nil }
 	end
+
+	self.jsCount = love.joystick.getJoystickCount()
+	print('js connected: ' .. self.jsCount)
+	local curJS = love.joystick.getJoysticks()
+	table.foreach(curJS, function (i)
+		joysticks[i].controller = Controller:new(i)
+		joysticks[i].joystick = curJS[i]
+	end)
 
 	local img = love.graphics.newImage('img/player.png')
 	self.sprite = newAnimation(img, 16, 16, 0.5, 0)
@@ -26,19 +31,44 @@ function MenuScreen:initialize()
 end
 
 function MenuScreen:update(dt)
-	if self.timer > 0 then
-		self.timer = self.timer - dt
-		if self.timer < 0 then self.timer = 0 end
-	else
-		screens:enterScreen(PlayScreen)
-		self.timer = 5
+	local startGame = 0
+	local secondStartPressed = false
+	self.startTimer = self.startTimer + dt
+
+	local curJS = love.joystick.getJoysticks()
+	local curJSCount = love.joystick.getJoystickCount()
+	if self.jsCount < curJSCount then
+		print('new controller connected')
+
+		for i=self.jsCount,curJSCount do
+			print(i)
+			joysticks[i].controller = Controller:new(i)
+			joysticks[i].joystick = curJS[i]
+		end
+		self.jsCount = curJSCount
+		self.startTimer = 0
 	end
-	table.foreach(self.joysticks, function (i)
-		self.joystickControllers[i] = Controller:new(i)
-		if self.joystickControllers[i]:startButton() then
-			self.joysticksReady[i] = true
+
+	table.foreach(joysticks, function (i)
+		if joysticks[i].controller ~= nil then
+			if joysticks[i].controller:startButton() then
+				if joysticks[i].ready and self.startTimer > 1 then
+					print('Second start pressed, lets start the game!')
+					secondStartPressed = true
+				end
+				joysticks[i].ready = true
+				self.startTimer = 0
+			elseif joysticks[i].controller:selectButton() then
+				joysticks[i].ready = false
+				self.startTimer = 0
+			end
 		end
 	end)
+
+	table.foreach(joysticks, function (i)
+		if joysticks[i].ready then startGame = startGame + 1 end
+	end)
+	if startGame >= 2 and secondStartPressed then screens:enterScreen(PlayScreen) end
 end
 
 function MenuScreen:draw()
@@ -48,15 +78,26 @@ function MenuScreen:draw()
 	else
 		self:drawPlayerScreens()
 	end
-	love.graphics.print(string.format('%.3f', self.timer), 100, 100)
+	local curJS = love.joystick.getJoysticks()
+	table.foreach(curJS, function (i)
+		if curJS ~= nil then
+			gPrint(curJS[i]:getName(), 10, i * 20)
+		end
+	end)
+	table.foreach(joysticks, function (i)
+		if joysticks[i].joystick ~= nil then
+			gPrint(joysticks[i].joystick:getName(), 700, i * 20)
+		end
+	end)
+	gPrint(self.startTimer, 5, 5)
 end
 
 function MenuScreen:drawPlayerScreens()
-	self.jsCount = love.joystick.getJoystickCount()
-	if self.jsCount % 2 == 1 then
-		self.jsCount = self.jsCount + 1
+	local jsCount = 8
+	if jsCount % 2 == 1 then
+		jsCount = jsCount + 1
 	end
-	local halfJsCount = self.jsCount / 2
+	local halfJsCount = jsCount / 2
 
 	local usernameWidth = self.font:getWidth('Player 8 ready!')
 	local readyTextWidth = self.font:getWidth(self.readyText)
@@ -66,12 +107,12 @@ function MenuScreen:drawPlayerScreens()
 	local readyTextHeight = self.font:getHeight(self.readyText)
 	local spriteHeight = self.sprite:getHeight()
 
-	for i = 1, self.jsCount, 1 do
+	for i = 1, jsCount, 1 do
 		local bottomMargin = 10
 		local height = love.graphics.getHeight()/4-10
-		local width = (love.graphics.getWidth()-10)/(self.jsCount/2)-10
+		local width = (love.graphics.getWidth()-10)/(jsCount/2)-10
 
-		local x = (love.graphics.getWidth()-10)/self.jsCount
+		local x = (love.graphics.getWidth()-10)/jsCount
 		local y = height + bottomMargin
 		if i <= halfJsCount then
 			y = y * 2
@@ -79,7 +120,7 @@ function MenuScreen:drawPlayerScreens()
 
 		gRec('line', 10+((i-1)%halfJsCount)*x*2, love.graphics.getHeight() - y, width, height)
 
-		if self.joysticksReady[i] then
+		if joysticks[i].ready then
 			gPrint('Player '..i .. ' ready!', 10+((i-1)%halfJsCount)*x*2 + width/2 - usernameWidth / 2, love.graphics.getHeight() - y + usernameHeight + height/2)
 			local r, g, b, a = love.graphics.getColor()
 			local colorR, colorG, colorB = getPlayerColor(i)
@@ -90,11 +131,6 @@ function MenuScreen:drawPlayerScreens()
 			gPrint(self.readyText, 10+((i-1)%halfJsCount)*x*2 + width/2 - readyTextWidth/2, love.graphics.getHeight() - y - readyTextHeight + height/2)
 		end
 	end
-
-end
-
-function MenuScreen:drawGameOver()
-
 end
 
 function gPrint(...)
@@ -138,9 +174,6 @@ function getPlayerColor(num)
 		colorB = 255
 	end
 	return colorR, colorG, colorB
-end
-
-function MenuScreen:onClose()
 end
 
 return MenuScreen
