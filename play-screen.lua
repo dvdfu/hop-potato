@@ -77,7 +77,7 @@ function PlayScreen:draw()
 			love.graphics.setFont(gameOverFont)
 			love.graphics.printf("PLAYER " .. i .. " GOT REKT!", 0, love.window.getHeight() / 2 - 50, love.window.getWidth(), "center")
 
-			love.graphics.setFont(font)	
+			love.graphics.setFont(subheadingFont)	
 			love.graphics.printf("(Press start to play again)", 0, love.window.getHeight() / 2 + 50, love.window.getWidth(), "center")
 
 			love.graphics.setFont(defaultFont)
