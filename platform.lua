@@ -6,11 +6,10 @@ local type = function(item, other)
 end
 
 function Platform:initialize()
-	self.w = math.random(60, 100)
-	self.x = math.random(0, love.graphics.getWidth() - self.w)
-	self.y = math.random(100, love.graphics.getHeight() - 16)
 	self.name = 'platform'
-	world:add(self, self.x, self.y, self.w, 16)
+	self.w = math.random(60, 100)
+	world:add(self, 0, 0, self.w, 16)
+	self.x, self.y = self:newLocation()
 
 	self.dustSprite = love.graphics.newImage('img/particle.png')
 	self.dust = love.graphics.newParticleSystem(self.dustSprite, 100)
@@ -34,12 +33,19 @@ function Platform:draw()
 end
 
 function Platform:move()
-	local destX = math.random(0, love.graphics.getWidth() - self.w)
-	local destY = math.random(100, love.graphics.getHeight() - 16)
+	local destX, destY = self:newLocation()
 	Flux.to(self, 1, {
 		x = destX,
 		y = destY
 	}):ease('cubicout')
+end
+
+function Platform:newLocation()
+	local rx = math.random(0, love.graphics.getWidth() - self.w)
+	local ry = math.random(200, lavaLevel - 16)
+	local actualX, actualY, cols, len = world:move(self, rx, ry, type)
+	if len > 1 then return self:newLocation()
+	else return rx, ry end
 end
 
 function Platform:leaveDust(x, y)

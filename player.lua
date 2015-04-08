@@ -57,6 +57,9 @@ function Player:initialize(num)
 	elseif num == 8 then
 		self.left = '0'
 		self.right = '-'
+		self.colorR = 255
+		self.colorB = 255
+		self.colorG = 255
 	end
 
 	self.name = 'player'
@@ -64,6 +67,7 @@ function Player:initialize(num)
 
 	--resources
 	jump = love.audio.newSource("sfx/jump.wav")
+	death = love.audio.newSource("sfx/death.wav")
 	local img = love.graphics.newImage('img/player.png')
 	self.sprite = newAnimation(img, 16, 16, 0.5, 0)
 
@@ -105,7 +109,11 @@ end
 function Player:update(dt)
 
 	self.sprite:update(dt)
-	self.timer:update(dt)
+
+	if owner == self and not self.respawning then
+		self.timer:update(dt)
+	end
+
 	self.respawning = self.respawnTime > 0
 
 	--movement
@@ -122,7 +130,8 @@ function Player:update(dt)
 
 	--wrap around room
 	local nocol = false --to skip collision checking
-	if self.y > love.window.getHeight() then
+	if self.y > lavaLevel then
+		death:play()
 		self:respawn()
 		nocol = true
 	end
@@ -146,13 +155,12 @@ function Player:draw()
 	love.graphics.setColor(self.colorR, self.colorG, self.colorB, 255)
 	self.sprite:draw(self.x, self.y, 0, 2, 2)
 	love.graphics.setColor(255, 255, 255, 255)
-	if carrier == self then
-		self.timer:draw(self.x, self.y - 25)
-	end
+	self.timer:draw(self.x, self.y - 25, 30)
 end
 
 function Player:respawn()
 	carrier = self
+	owner = carrier
 	self.respawnTime = 2
 	self.x = math.random(0, love.window.getWidth())
 	self.y = 20
