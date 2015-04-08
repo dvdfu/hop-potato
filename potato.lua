@@ -3,23 +3,34 @@ Potato = Class('Potato')
 function Potato:initialize()
 	self.sprite = love.graphics.newImage('img/potato.png')
 	self.x, self.y = carrier.x, carrier.y
+	self.w, self.h = 32, 32
 	self.vx, self.vy = 0, 0
 	self.rotation = 0
 	self.dead = false
 
-	--fire configuration
-	self.fireSprite = love.graphics.newImage('img/particle.png')
+	--fire particles
+	self.fireSprite = love.graphics.newImage('img/flame.png')
 	self.fire = love.graphics.newParticleSystem(self.fireSprite, 200)
-	self.fire:setAreaSpread('normal', 8, 8)
+	self.fire:setAreaSpread('normal', 6, 4)
 	self.fire:setParticleLifetime(0.1, 0.15)
 	self.fire:setDirection(-math.pi / 2)
 	self.fire:setSpeed(160, 300)
 	self.fire:setColors(255, 0, 0, 255, 255, 120, 0, 255, 255, 200, 0, 255)
 	self.fire:setEmissionRate(200)
-	self.fire:setSizes(1, 0.5)
+	self.fire:setSizes(1.5, 0.5)
+
+	--explosion particles
+	self.explosionSprite = love.graphics.newImage('img/particle.png')
+	self.explosion = love.graphics.newParticleSystem(self.explosionSprite, 1000)
+	self.explosion:setAreaSpread('normal', 0, 0)
+	self.explosion:setParticleLifetime(2, 3)
+	self.explosion:setSpread(math.pi * 2)
+	self.explosion:setSpeed(200, 300)
+	self.explosion:setColors(160, 160, 160, 255)
+	self.explosion:setSizes(5, 3)
 
 	self.name = 'potato'
-	world:add(self, self.x, self.y, 32, 32)
+	world:add(self, self.x, self.y, self.w, self.h)
 
 	--resources
 	throw = love.audio.newSource("sfx/throw.wav")
@@ -44,8 +55,9 @@ function Potato:collide()
 			self:attach(col.other)
 			hit:play()
 		elseif carrier == nil and col.other.name == 'platform' and col.normal.y == -1 then
-			self.y = col.other.y - 32
+			self.y = col.other.y - self.h
 			self.vy = -8
+			col.other:leaveDust(self.x + self.w / 2, self.y + self.h)
 			col.other:move()
 			jump:play()
 		end
@@ -56,8 +68,10 @@ function Potato:update(dt)
 	local nocol = false
 
 	--update fire
-	self.fire:setPosition(self.x + 16, self.y + 16)
+	self.fire:setPosition(self.x + self.w / 2, self.y + self.h / 2)
 	self.fire:update(dt)
+	self.explosion:setPosition(self.x + self.w / 2, self.y + self.h / 2)
+	self.explosion:update(dt)
 
 	--follow trajectory when thrown
 	if carrier == nil then
@@ -89,6 +103,7 @@ function Potato:update(dt)
 		end
 	end
 
+	self.x, self.y = self.x + (32 - self.w) / 2, self.y + (32 - self.h) / 2
 	--wrap around room
 	if self.y + self.vy < 0 then
 		self.y = 0
@@ -112,6 +127,12 @@ function Potato:update(dt)
 	else
 		self:collide()
 	end
+
+	--timer out
+	if carrier ~= nil and carrier.timer:getTime() == 0 and not self.dead then
+		-- self.explosion:emit(500)
+		self.dead = true
+	end
 end
 
 function Potato:attach(player)
@@ -127,8 +148,10 @@ function Potato:draw()
 	love.graphics.draw(self.fire)
 	love.graphics.draw(self.fire, -love.graphics.getWidth())
 	love.graphics.setBlendMode('alpha')
-	love.graphics.draw(self.sprite, self.x + 16, self.y + 16, self.rotation, 2, 2, 8, 8)
-	love.graphics.draw(self.sprite, self.x + 16 - love.graphics.getWidth(), self.y + 16, self.rotation, 2, 2, 8, 8)
+	love.graphics.draw(self.explosion)
+	love.graphics.draw(self.explosion, -love.graphics.getWidth())
+	love.graphics.draw(self.sprite, self.x + self.w / 2, self.y + self.h / 2, self.rotation, self.w / 16, self.h / 16, 8, 8)
+	love.graphics.draw(self.sprite, self.x + self.w / 2 - love.graphics.getWidth(), self.y + self.h / 2, self.rotation, self.w / 16, self.h / 16, 8, 8)
 end
 
 return Potato
