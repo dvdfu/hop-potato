@@ -12,7 +12,7 @@ function PlayScreen:initialize()
 
 	world = Bump.newWorld(64)
 	players = {}
-	numPlayers = 0
+	local numPlayers = 0
 	table.foreach(joysticks, function (i)
 		if joysticks[i].controller ~= nil and joysticks[i].ready then
 			numPlayers = numPlayers + 1
@@ -59,13 +59,13 @@ function PlayScreen:update(dt)
 		platforms[i]:update(dt)
 	end)
 
-	numDead = 0
-	tempWinner = 0
+	local numAlive = 0
+	local tempWinner = 0
 	table.foreach(players, function (i)
 		players[i]:update(dt)
 
-		if not players[i].alive then
-			numDead = numDead + 1
+		if players[i].alive then
+			numAlive = numAlive + 1
 		else
 			tempWinner = i
 		end
@@ -76,7 +76,7 @@ function PlayScreen:update(dt)
 	end)
 	potato:update(dt)
 
-	if numPlayers - numDead == 1 then
+	if  numAlive == 1 then
 		winner = tempWinner
 	end
 end
