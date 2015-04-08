@@ -24,6 +24,8 @@ function Potato:initialize()
 	--resources
 	throw = love.audio.newSource("sfx/throw.wav")
 	jump = love.audio.newSource("sfx/jump.wav")
+	hit = love.audio.newSource("sfx/hit.wav")
+	death = love.audio.newSource("sfx/death.wav")
 end
 
 --define collision properties
@@ -40,6 +42,7 @@ function Potato:collide()
 		local col = cols[i]
 		if col.other.name == 'player' and col.other ~= carrier and carrierTime > 1 then
 			self:attach(col.other)
+			hit:play()
 		elseif carrier == nil and col.other.name == 'platform' and col.normal.y == -1 then
 			self.y = col.other.y - 32
 			self.vy = -8
@@ -91,6 +94,7 @@ function Potato:update(dt)
 	elseif self.y  + self.vy > lavaLevel then
 		self:attach(owner)
 		nocol = true;
+		death:play()
 	end
 	if self.x > love.window.getWidth() then
 		self.x = self.x - love.window.getWidth()
