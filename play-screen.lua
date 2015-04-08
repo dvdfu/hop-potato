@@ -8,7 +8,7 @@ PlayScreen = Class('PlayScreen')
 
 function PlayScreen:initialize()
 	--consts
-	lavaLevel = love.graphics.getHeight() * 0.8
+	lavaLevel = love.graphics.getHeight()
 
 	world = Bump.newWorld(64)
 	players = {}
@@ -35,15 +35,15 @@ function PlayScreen:initialize()
 	
 	--fire configuration
 	self.fireSprite = love.graphics.newImage('img/particle.png')
-	self.fire = love.graphics.newParticleSystem(self.fireSprite, 1000)
+	self.fire = love.graphics.newParticleSystem(self.fireSprite, 2000)
 	self.fire:setPosition(love.graphics.getWidth() / 2, love.graphics.getHeight())
 	self.fire:setAreaSpread('normal', love.graphics.getWidth() / 2, 0)
-	self.fire:setParticleLifetime(0, 0.3)
+	self.fire:setParticleLifetime(0, 0.5)
 	self.fire:setDirection(-math.pi / 2)
 	self.fire:setSpeed(160, 300)
 	self.fire:setColors(255, 0, 0, 255, 255, 120, 0, 255, 255, 200, 0, 255)
-	self.fire:setEmissionRate(300)
-	self.fire:setSizeVariation(0)
+	self.fire:setEmissionRate(1000)
+	self.fire:setSizes(1, 0.5)
 end
 
 function PlayScreen:update(dt)
@@ -90,12 +90,11 @@ function PlayScreen:draw()
 	potato:draw()
 
 	love.graphics.setBlendMode('additive')
-	love.graphics.setColor(255, 0, 0, 255)
-	love.graphics.rectangle('fill', 0, lavaLevel, love.graphics.getWidth(), love.graphics.getHeight() * 0.2)
-	love.graphics.setColor(255, 255, 255, 255)
+	-- love.graphics.setColor(255, 0, 0, 255)
+	-- love.graphics.rectangle('fill', 0, lavaLevel, love.graphics.getWidth(), 64)
+	-- love.graphics.setColor(255, 255, 255, 255)
 	love.graphics.draw(self.fire)
 	love.graphics.setBlendMode('alpha')
-	love.graphics.setShader()
 end
 
 function PlayScreen:onClose()
