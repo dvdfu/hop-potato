@@ -34,7 +34,7 @@ function PlayScreen:initialize()
 	defaultFont = love.graphics.newFont(14)
 	
 	--fire configuration
-	self.fireSprite = love.graphics.newImage('img/particle.png')
+	self.fireSprite = love.graphics.newImage('img/flame.png')
 	self.fire = love.graphics.newParticleSystem(self.fireSprite, 2000)
 	self.fire:setPosition(love.graphics.getWidth() / 2, love.graphics.getHeight())
 	self.fire:setAreaSpread('normal', love.graphics.getWidth() / 2, 0)
@@ -81,12 +81,13 @@ function PlayScreen:draw()
 			love.graphics.setFont(gameOverFont)
 			love.graphics.printf("PLAYER " .. i .. " GOT REKT!", 0, love.window.getHeight() / 2 - 50, love.window.getWidth(), "center")
 
-			love.graphics.setFont(font)	
+			love.graphics.setFont(subheadingFont)	
 			love.graphics.printf("(Press start to play again)", 0, love.window.getHeight() / 2 + 50, love.window.getWidth(), "center")
 
 			love.graphics.setFont(defaultFont)
 		end
 	end)
+	
 	potato:draw()
 
 	love.graphics.setBlendMode('additive')

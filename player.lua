@@ -18,6 +18,8 @@ function Player:initialize(num)
 	self.controller = Controller:new(num)
 	self.timer = Timer:new(20)
 
+	self.alive = true
+
 	--user-specific data
 	self.colorR = 100
 	self.colorG = 100
@@ -31,9 +33,35 @@ function Player:initialize(num)
 		self.right = 'right'
 		self.colorG = 255
 	elseif num == 3 then
-		self.left = 'j'
-		self.right = 'l'
+		self.left = 'f'
+		self.right = 'g'
 		self.colorB = 255
+	elseif num == 4 then
+		self.left = 'j'
+		self.right = 'k'
+		self.colorG = 255
+		self.colorR = 255
+	elseif num == 5 then
+		self.left = '1'
+		self.right = '2'
+		self.colorG = 255
+		self.colorB = 255
+	elseif num == 6 then
+		self.left = '4'
+		self.right = '5'
+		self.colorR = 255
+		self.colorB = 255
+	elseif num == 7 then
+		self.left = '7'
+		self.right = '8'
+		self.colorG = 180
+		self.colorR = 255
+	elseif num == 8 then
+		self.left = '0'
+		self.right = '-'
+		self.colorR = 255
+		self.colorB = 255
+		self.colorG = 255
 	end
 
 	self.name = 'player'
@@ -70,7 +98,7 @@ function Player:collide()
 				jump:play()
 			end
 		end
-		if col.other.name == 'player' then
+		if col.other.name == 'player' and col.other.alive then
 			if col.normal.y == -1 and self.y + self.h - self.vy < col.other.y then
 				self.y = col.other.y - self.h
 				self.vy = -Player.jump_vel
@@ -81,11 +109,17 @@ function Player:collide()
 end
 
 function Player:update(dt)
+	if self.alive == false then return end
 
 	self.sprite:update(dt)
 
 	if owner == self and not self.respawning then
 		self.timer:update(dt)
+	end
+
+	--checks for death
+	if self.timer:getTime() <= 0 then
+		self.alive = false
 	end
 	
 	self.respawning = self.respawnTime > 0
@@ -137,6 +171,8 @@ function Player:update(dt)
 end
 
 function Player:draw()
+	if self.alive == false then return end
+
 	if owner == self then
 		love.graphics.setBlendMode('additive')
 		love.graphics.setColor(255, 200, 0, 255)

@@ -7,14 +7,14 @@ screens = {}
 function love.load()
 	math.randomseed(os.time())
 	love.graphics.setDefaultFilter('nearest', 'nearest')
-	love.graphics.setBackgroundColor(40, 40, 40)
+	love.graphics.setBackgroundColor(40, 50, 60)
 
-	font = love.graphics.newImageFont("img/font.png", " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/():;%&`'*#=[]\"")
+	--font = love.graphics.newImageFont("img/font.png", " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/():;%&`'*#=[]\"")
 	-- font.setWidth(4)
-	love.graphics.setFont(font)
+	--love.graphics.setFont(font)
 
 	screenNum = 0
-	screens:enterScreen(PlayScreen)
+	screens:enterScreen(MenuScreen)
 end
 
 function love.update(dt)
