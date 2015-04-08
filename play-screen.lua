@@ -27,7 +27,7 @@ function PlayScreen:initialize()
 	for i = 0, numPlatforms, 1 do platforms[i] = Platform:new() end
 	potato = Potato:new()
 	winner = 0
-	numDead = 0
+	numAlive = numPlayers
 
 	music = love.audio.newSource("sfx/yakety-sax.mp3")
 	music:setLooping(true)
@@ -59,15 +59,12 @@ function PlayScreen:update(dt)
 		platforms[i]:update(dt)
 	end)
 
-	local numAlive = 0
 	local tempWinner = 0
 	table.foreach(players, function (i)
 		players[i]:update(dt)
 
-		if players[i].alive then
-			numAlive = numAlive + 1
-		else
-			tempWinner = i
+		if numAlive == 1 and players[i].alive then
+			winner = i
 		end
 
 		if winner ~= 0 and players[i].controller:startButton() then
@@ -75,10 +72,6 @@ function PlayScreen:update(dt)
 		end
 	end)
 	potato:update(dt)
-
-	if  numAlive == 1 then
-		winner = tempWinner
-	end
 end
 
 function PlayScreen:draw()
