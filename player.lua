@@ -21,7 +21,6 @@ function Player:initialize(num)
 	self.injuryFlicker = 0
 
 	self.alive = true
-	self.removed = false
 
 	--user-specific data
 	self.colorR = 100
@@ -183,10 +182,7 @@ function Player:update(dt)
 	if self.timer:getTime() <= 0 then
 		self.alive = false
 
-		if not self.removed then
-			world:remove(self)
-			self.removed = true
-		end
+		world:remove(self)
 	end
 end
 
