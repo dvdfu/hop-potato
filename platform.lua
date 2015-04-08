@@ -20,7 +20,6 @@ function Platform:initialize()
 	self.dust:setDirection(-math.pi / 2)
 	self.dust:setSpeed(160)
 	self.dust:setLinearAcceleration(0, 200, 0, 500)
-	self.dust:setSizes(1, 0.5)
 end
 
 function Platform:update(dt)
@@ -43,7 +42,7 @@ end
 
 function Platform:newLocation()
 	local rx = math.random(0, love.graphics.getWidth() - self.w)
-	local ry = math.random(300, lavaLevel - 16)
+	local ry = math.random(200, lavaLevel - 16)
 	local actualX, actualY, cols, len = world:move(self, rx, ry, type)
 	if len > 1 then return self:newLocation()
 	else return rx, ry end
