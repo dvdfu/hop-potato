@@ -14,7 +14,7 @@ function PlayScreen:initialize()
 	players = {}
 	numPlayers = 0
 	table.foreach(joysticks, function (i)
-		if joysticks[i].controller ~= nil then
+		if joysticks[i].controller ~= nil and joysticks[i].ready then
 			numPlayers = numPlayers + 1
 			players[numPlayers] = Player:new(i)
 		end
