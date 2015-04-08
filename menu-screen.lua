@@ -122,4 +122,7 @@ function getPlayerColor(num)
 	return colorR, colorG, colorB
 end
 
+function MenuScreen:onClose()
+end
+
 return MenuScreen

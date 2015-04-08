@@ -1,11 +1,11 @@
 class = require 'lib.middleclass'
 Timer = class('Timer')
 
-function Timer:initialize()
+function Timer:initialize(start)
 	font = love.graphics.newFont(14)
 	love.graphics.setFont(font)
 
-	self.time = 30
+	self.time = start
 end
 
 function Timer:update(dt)
@@ -17,7 +17,7 @@ function Timer:update(dt)
 end
 
 function Timer:draw(x, y, textWidth)
-	love.graphics.printf(string.format("%i", self.time), x, y, 25, "center")
+	love.graphics.printf(string.format("%i", math.ceil(self.time)), x, y, textWidth, "center")
 end
 
 function Timer:getTime()
