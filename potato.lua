@@ -124,6 +124,8 @@ function Potato:update(dt)
 		self:attach(owner)
 		nocol = true;
 		death:play()
+		self.y = 0
+		self.vy = -self.vy
 	end
 	if self.x > love.window.getWidth() then
 		self.x = self.x - love.window.getWidth()
