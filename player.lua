@@ -97,7 +97,7 @@ function Player:update(dt)
 	if self.injured then
 		self.injuryFlicker = self.injuryFlicker + 1
 	end
-	
+
 	self.respawning = self.respawnTime > 0
 
 	--movement

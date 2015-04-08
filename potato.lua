@@ -156,7 +156,7 @@ function Potato:attach(player)
 end
 
 function Potato:draw()
-	love.graphics.setBlendMode('additive')
+	love.graphics.setBlendMode('screen')
 	love.graphics.draw(self.fire)
 	love.graphics.draw(self.fire, -love.graphics.getWidth())
 	love.graphics.setBlendMode('alpha')
