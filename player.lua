@@ -17,6 +17,8 @@ function Player:initialize(num)
 	self:respawn()
 	self.controller = Controller:new(num)
 	self.timer = Timer:new(20)
+	self.injured = false
+	self.injuryFlicker = 0
 
 	--user-specific data
 	self.colorR = 100
@@ -114,12 +116,16 @@ function Player:update(dt)
 		self.timer:update(dt)
 	end
 
+	if self.injured then
+		self.injuryFlicker = self.injuryFlicker + 1
+	end
+
 	self.respawning = self.respawnTime > 0
 
 	--movement
 	local speedBoost = 0
 	if owner == self then
-		speedBoost = 1.5
+		speedBoost = 0.8
 	end
 	self.vx = self.controller:leftAnalogX() * (Player.move_vel + speedBoost)
 
@@ -130,6 +136,9 @@ function Player:update(dt)
 		local fallBoost = 0
 		if self.controller:leftAnalogY() > 0 then
 			fallBoost = self.controller:leftAnalogY()
+		end
+		if self.vy > 0 then
+			self.injured = false
 		end
 		self.vy = self.vy + Player.gravity + fallBoost / 3
 	else
@@ -143,7 +152,12 @@ function Player:update(dt)
 		self.vy = 0
 	elseif self.y > lavaLevel then
 		death:play()
-		self:respawn()
+		self.y = lavaLevel - self.h
+		self.vy = -18
+		-- self.timer:addTime(-3)
+		potato:attach(self)
+		self.injured = true
+		self.injuryFlicker = 0
 		nocol = true
 	end
 	if self.x > love.window.getWidth() then
@@ -163,17 +177,19 @@ function Player:update(dt)
 end
 
 function Player:draw()
-	if owner == self then
-		love.graphics.setBlendMode('additive')
-		love.graphics.setColor(255, 200, 0, 255)
-		love.graphics.rectangle('fill', self.x - 2, self.y - 2, self.w + 4, self.h + 4)
-		love.graphics.rectangle('fill', self.x - 2 - love.graphics.getWidth(), self.y - 2, self.w + 4, self.h + 4)
-		love.graphics.setBlendMode('alpha')
+	if not self.injured or self.injuryFlicker % 4 < 2 then
+		if owner == self then
+			love.graphics.setBlendMode('additive')
+			love.graphics.setColor(255, 200, 0, 255)
+			love.graphics.rectangle('fill', self.x - 2, self.y - 2, self.w + 4, self.h + 4)
+			love.graphics.rectangle('fill', self.x - 2 - love.graphics.getWidth(), self.y - 2, self.w + 4, self.h + 4)
+			love.graphics.setBlendMode('alpha')
+		end
+		love.graphics.setColor(self.colorR, self.colorG, self.colorB, 255)
+		self.sprite:draw(self.x, self.y, 0, 2, 2)
+		self.sprite:draw(self.x - love.graphics.getWidth(), self.y, 0, 2, 2)
+		love.graphics.setColor(255, 255, 255, 255)
 	end
-	love.graphics.setColor(self.colorR, self.colorG, self.colorB, 255)
-	self.sprite:draw(self.x, self.y, 0, 2, 2)
-	self.sprite:draw(self.x - love.graphics.getWidth(), self.y, 0, 2, 2)
-	love.graphics.setColor(255, 255, 255, 255)
 	self.timer:draw(self.x, self.y - 25, 32)
 	self.timer:draw(self.x - love.graphics.getWidth(), self.y - 25, 32)
 end
