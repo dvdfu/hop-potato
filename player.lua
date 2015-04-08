@@ -36,9 +36,35 @@ function Player:initialize(num)
 		self.right = 'right'
 		self.colorG = 255
 	elseif num == 3 then
-		self.left = 'j'
-		self.right = 'l'
+		self.left = 'f'
+		self.right = 'g'
 		self.colorB = 255
+	elseif num == 4 then
+		self.left = 'j'
+		self.right = 'k'
+		self.colorG = 255
+		self.colorR = 255
+	elseif num == 5 then
+		self.left = '1'
+		self.right = '2'
+		self.colorG = 255
+		self.colorB = 255
+	elseif num == 6 then
+		self.left = '4'
+		self.right = '5'
+		self.colorR = 255
+		self.colorB = 255
+	elseif num == 7 then
+		self.left = '7'
+		self.right = '8'
+		self.colorG = 180
+		self.colorR = 255
+	elseif num == 8 then
+		self.left = '0'
+		self.right = '-'
+		self.colorR = 255
+		self.colorB = 255
+		self.colorG = 255
 	end
 
 	self.name = 'player'
