@@ -4,6 +4,26 @@ MenuScreen = require 'menu-screen'
 
 screens = {}
 
+function screens:enterScreen(screen)
+	screenNum = screenNum + 1
+	screens[screenNum] = screen:new()
+end
+
+function screens:exitScreen()
+	if screenNum > 1 then
+		screens[screenNum]:onClose()
+		screens[screenNum] = nil
+		screenNum = screenNum - 1
+	else
+		love.event.push('quit')
+	end
+end
+
+function screens:changeScreen(screen)
+	screens:exitScreen()
+	screens:enterScreen(screen)
+end
+
 function love.load()
 	math.randomseed(os.time())
 	love.graphics.setDefaultFilter('nearest', 'nearest')
@@ -18,30 +38,12 @@ function love.load()
 end
 
 function love.update(dt)
-	if love.keyboard.isDown('escape') then
-		love.event.push('quit')
-	end
 	screens[screenNum]:update(dt)
+	if love.keyboard.isDown('escape') then
+		screens:exitScreen()
+	end
 end
 
 function love.draw()
 	screens[screenNum]:draw()
-end
-
-function screens:enterScreen(screen)
-	screenNum = screenNum + 1
-	screens[screenNum] = screen:new()
-end
-
-function screens:exitScreen()
-	if screenNum > 0 then
-		screens[screenNum]:onClose()
-		screens[screenNum] = nil
-		screenNum = screenNum - 1
-	end
-end
-
-function screens:changeScreen(screen)
-	screens:exitScreen()
-	screens:enterScreen(screen)
 end

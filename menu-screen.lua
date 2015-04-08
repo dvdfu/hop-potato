@@ -57,10 +57,14 @@ function MenuScreen:update(dt)
 					secondStartPressed = true
 				end
 				joysticks[i].ready = true
-				self.startTimer = 0
+				if self.startTimer > 1 then
+					self.startTimer = 0
+				end
 			elseif joysticks[i].controller:selectButton() then
 				joysticks[i].ready = false
-				self.startTimer = 0
+				if self.startTimer > 1 then
+					self.startTimer = 0
+				end
 			end
 		end
 	end)
@@ -173,6 +177,9 @@ function getPlayerColor(num)
 		colorB = 255
 	end
 	return colorR, colorG, colorB
+end
+
+function MenuScreen:onClose()
 end
 
 return MenuScreen
