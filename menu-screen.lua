@@ -1,4 +1,5 @@
 PlayScreen = require 'play-screen'
+Controller = require 'controller'
 
 MenuScreen = Class('MenuScreen')
 
@@ -88,7 +89,6 @@ function MenuScreen:draw()
 			gPrint(joysticks[i].joystick:getName(), 700, i * 20)
 		end
 	end)
-	gPrint(self.startTimer, 5, 5)
 end
 
 function MenuScreen:drawPlayerScreens()
