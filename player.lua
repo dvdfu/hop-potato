@@ -181,8 +181,8 @@ function Player:update(dt)
 	--checks for death
 	if self.timer:getTime() <= 0 then
 		self.alive = false
-
 		world:remove(self)
+		numAlive = numAlive - 1
 	end
 end
 

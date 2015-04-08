@@ -26,6 +26,8 @@ function PlayScreen:initialize()
 	local numPlatforms = love.graphics.getWidth() * love.graphics.getHeight() / 50000
 	for i = 0, numPlatforms, 1 do platforms[i] = Platform:new() end
 	potato = Potato:new()
+	winner = 0
+	numAlive = numPlayers
 
 	music = love.audio.newSource("sfx/yakety-sax.mp3")
 	music:setLooping(true)
@@ -56,10 +58,16 @@ function PlayScreen:update(dt)
 	table.foreach(platforms, function (i)
 		platforms[i]:update(dt)
 	end)
+
+	local tempWinner = 0
 	table.foreach(players, function (i)
 		players[i]:update(dt)
 
-		if players[i].timer:getTime() <= 0 and players[i].controller:startButton() then
+		if numAlive == 1 and players[i].alive then
+			winner = i
+		end
+
+		if winner ~= 0 and players[i].controller:startButton() then
 			screens:changeScreen(PlayScreen)
 		end
 	end)
@@ -80,9 +88,9 @@ function PlayScreen:draw()
 	table.foreach(players, function (i)
 		players[i]:draw()
 
-		if players[i].timer:getTime() <= 0 then
+		if winner ~= 0 then
 			love.graphics.setFont(gameOverFont)
-			love.graphics.printf("PLAYER " .. i .. " GOT REKT!", 0, love.window.getHeight() / 2 - 50, love.window.getWidth(), "center")
+			love.graphics.printf("PLAYER " .. winner .. " WINS!", 0, love.window.getHeight() / 2 - 50, love.window.getWidth(), "center")
 
 			love.graphics.setFont(subheadingFont)	
 			love.graphics.printf("(Press start to play again)", 0, love.window.getHeight() / 2 + 50, love.window.getWidth(), "center")
