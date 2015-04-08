@@ -4,8 +4,8 @@ Timer = require 'timer'
 Player = Class('Player')
 
 Player.static.move_vel = 4
-Player.static.jump_vel = 10
-Player.static.gravity = 0.2
+Player.static.jump_vel = 12
+Player.static.gravity = 0.3
 
 function Player:initialize(num)
 	self.num = num
@@ -16,7 +16,7 @@ function Player:initialize(num)
 
 	self:respawn()
 	self.controller = Controller:new(num)
-	self.timer = Timer:new(10)
+	self.timer = Timer:new(20)
 
 	--user-specific data
 	self.colorR = 100
@@ -91,13 +91,21 @@ function Player:update(dt)
 	self.respawning = self.respawnTime > 0
 
 	--movement
-	self.vx = self.controller:leftAnalogX() * Player.move_vel
+	local speedBoost = 0
+	if owner == self then
+		speedBoost = 1.5
+	end
+	self.vx = self.controller:leftAnalogX() * (Player.move_vel + speedBoost)
 
 	--control falling speed
 	if self.respawning then
 		self.respawnTime = self.respawnTime - dt
 	elseif self.vy < 20 then
-		self.vy = self.vy + Player.gravity
+		local fallBoost = 0
+		if self.controller:leftAnalogY() > 0 then
+			fallBoost = self.controller:leftAnalogY()
+		end
+		self.vy = self.vy + Player.gravity + fallBoost / 3
 	else
 		self.vy = 20
 	end
@@ -140,8 +148,8 @@ function Player:draw()
 	self.sprite:draw(self.x, self.y, 0, 2, 2)
 	self.sprite:draw(self.x - love.graphics.getWidth(), self.y, 0, 2, 2)
 	love.graphics.setColor(255, 255, 255, 255)
-	self.timer:draw(self.x, self.y - 25, 30)
-	self.timer:draw(self.x - love.graphics.getWidth(), self.y - 25, 30)
+	self.timer:draw(self.x, self.y - 25, 32)
+	self.timer:draw(self.x - love.graphics.getWidth(), self.y - 25, 32)
 end
 
 function Player:respawn()
