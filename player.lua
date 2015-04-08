@@ -18,6 +18,8 @@ function Player:initialize(num)
 	self.controller = Controller:new(num)
 	self.timer = Timer:new(10)
 
+	self.alive = true
+
 	--user-specific data
 	self.colorR = 100
 	self.colorG = 100
@@ -70,7 +72,7 @@ function Player:collide()
 				jump:play()
 			end
 		end
-		if col.other.name == 'player' then
+		if col.other.name == 'player' and col.other.alive then
 			if col.normal.y == -1 and self.y + self.h - self.vy < col.other.y then
 				self.y = col.other.y - self.h
 				self.vy = -Player.jump_vel
@@ -81,11 +83,17 @@ function Player:collide()
 end
 
 function Player:update(dt)
+	if self.alive == false then return end
 
 	self.sprite:update(dt)
 
 	if owner == self and not self.respawning then
 		self.timer:update(dt)
+	end
+
+	--checks for death
+	if self.timer:getTime() <= 0 then
+		self.alive = false
 	end
 	
 	self.respawning = self.respawnTime > 0
@@ -129,6 +137,8 @@ function Player:update(dt)
 end
 
 function Player:draw()
+	if self.alive == false then return end
+
 	if owner == self then
 		love.graphics.setBlendMode('additive')
 		love.graphics.setColor(255, 200, 0, 255)

@@ -83,6 +83,7 @@ function PlayScreen:draw()
 			love.graphics.setFont(defaultFont)
 		end
 	end)
+	
 	potato:draw()
 
 	love.graphics.setBlendMode('additive')

@@ -59,6 +59,18 @@ function Potato:update(dt)
 	self.fire:setPosition(self.x + 16, self.y + 16)
 	self.fire:update(dt)
 
+	if carrier ~= nil and not carrier.alive then	
+		table.foreach(players, function (i)
+			if players[i].alive then
+				self:attach(players[i])				
+			end
+		end)
+
+		if not carrier.alive then
+			carrier = nil
+		end
+	end
+
 	--follow trajectory when thrown
 	if carrier == nil then
 		local speed = math.sqrt(self.vx * self.vx + self.vy * self.vy)
