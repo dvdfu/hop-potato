@@ -34,7 +34,7 @@ function PlayScreen:initialize()
 	defaultFont = love.graphics.newFont(14)
 	
 	--fire configuration
-	self.fireSprite = love.graphics.newImage('img/particle.png')
+	self.fireSprite = love.graphics.newImage('img/flame.png')
 	self.fire = love.graphics.newParticleSystem(self.fireSprite, 2000)
 	self.fire:setPosition(love.graphics.getWidth() / 2, love.graphics.getHeight())
 	self.fire:setAreaSpread('normal', love.graphics.getWidth() / 2, 0)
