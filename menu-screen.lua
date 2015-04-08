@@ -31,39 +31,46 @@ function MenuScreen:update(dt)
 end
 
 function MenuScreen:draw()
-	for i = 1, 10, 1 do
-		gPrint(i*100, i*100, 10)
-	end
-	gPrint(self.subTitle, love.graphics.getWidth()/3-string.len(self.subTitle)/2, love.graphics.getHeight()/3)
+	gPrint(self.subTitle, love.graphics.getWidth()/7, love.graphics.getHeight()/4)
 	if self.playersConfigured then
 		self:drawGameOver()
 	else
 		self:drawPlayerScreens()
 	end
-	love.graphics.print(string.format('%.3f', self.timer), 300, 300)
+	love.graphics.print(string.format('%.3f', self.timer), 100, 100)
 end
 
 function MenuScreen:drawPlayerScreens()
 	self.jsCount = 8
-	for i = 1, self.jsCount, 1 do
-		local bottomMargin = 50
-		local height = love.graphics.getHeight()/3
-		local width = (love.graphics.getWidth()-10)/self.jsCount-10
-		local x = (love.graphics.getWidth()-10)/self.jsCount
-		local y = love.graphics.getHeight() - height - bottomMargin
-		gRec('line', 10+(i-1)*x, y, width, height)
-		table.foreach(self.joysticksReady, function (i)
-			if self.joysticksReady[i] then
-				gPrint('Player '..i, (width - x)/3+x, (height - y)/3 + y)
+	if self.jsCount % 2 == 1 then
+		self.jsCount = self.jsCount + 1
+	end
+	local halfJsCount = self.jsCount / 2
 
-				local r, g, b, a = love.graphics.getColor()
-				love.graphics.setColor(getPlayerColor(i), 255)
-				self.sprite:draw(self.x, self.y, 0, 2, 2)
-				love.graphics.setColor(r, g, b, a)
-			else
-				gPrint(self.readyText, (width - x)/3+x, (height - y)/3 + y)
-			end
-		end)
+	for i = 1, self.jsCount, 1 do
+		local bottomMargin = 10
+		local height = love.graphics.getHeight()/4-10
+		local width = (love.graphics.getWidth()-10)/(self.jsCount/2)-10
+
+		local x = (love.graphics.getWidth()-10)/self.jsCount
+		local y = height + bottomMargin
+		if i <= halfJsCount then
+			y = y * 2
+			self.joysticksReady[i] = true
+		end
+
+		gRec('line', 10+((i-1)%halfJsCount)*x*2, love.graphics.getHeight() - y, width, height)
+
+		if self.joysticksReady[i] then
+			gPrint('Player '..i, 10+((i-1)%halfJsCount)*x*2 + x*2/3, love.graphics.getHeight() - y+40)
+			local r, g, b, a = love.graphics.getColor()
+			local colorR, colorG, colorB = getPlayerColor(i)
+			love.graphics.setColor(colorR, colorG, colorB, 255)
+			self.sprite:draw(10+((i-1)%halfJsCount)*x*2 + x*7/8, love.graphics.getHeight() - y, 0, 2, 2)
+			love.graphics.setColor(r, g, b, a)
+		else
+			gPrint(self.readyText, 10+((i-1)%halfJsCount)*x*2 + 10, love.graphics.getHeight() - y + 5)
+		end
 	end
 
 end
