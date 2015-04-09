@@ -195,8 +195,8 @@ function Player:draw()
 		self.sprite:draw(self.x - love.graphics.getWidth(), self.y, 0, 2, 2)
 		love.graphics.setColor(255, 255, 255, 255)
 	end
-	self.timer:draw(self.x, self.y - 25, 32)
-	self.timer:draw(self.x - love.graphics.getWidth(), self.y - 25, 32)
+	self.timer:draw(self.x, self.y - 33, 32)
+	self.timer:draw(self.x - love.graphics.getWidth(), self.y - 33, 32)
 end
 
 function Player:respawn()
