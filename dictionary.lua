@@ -14,7 +14,7 @@ end
 function Dictionary:generateName()
   local n1 = math.random(1, self.length)
   local n2 = math.random(1, self.length)
-  return firstToUpper(self.dict[n1]) .. ' ' .. firstToUpper(self.dict[n2])
+  return self:firstToUpper(self.dict[n1]) .. ' ' .. self:firstToUpper(self.dict[n2])
 end
 
 function Dictionary:firstToUpper(str)
