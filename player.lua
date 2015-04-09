@@ -197,8 +197,8 @@ function Player:draw()
 		love.graphics.setColor(255, 255, 255, 255)
 
 		if self.crown then
-			love.graphics.draw(self.crownSprite, self.x, self.y - 16, 0, 2, 2)
-			love.graphics.draw(self.crownSprite, self.x - love.graphics.getWidth(), self.y - 16, 0, 2, 2)
+			love.graphics.draw(self.crownSprite, self.x, self.y - 18, 0, 2, 2)
+			love.graphics.draw(self.crownSprite, self.x - love.graphics.getWidth(), self.y - 18, 0, 2, 2)
 		end
 	end
 	self.timer:draw(self.x, self.y - 32, 32)
