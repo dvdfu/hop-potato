@@ -97,13 +97,14 @@ function PlayScreen:draw()
 		players[i]:draw()
 
 		if winner ~= 0 then
+			love.graphics.setColor(players[winner].colorR, players[winner].colorG, players[winner].colorB, 255)
 			love.graphics.setFont(gameOverFont)
 			love.graphics.printf(joysticks[winner].name .. " WINS!", 0, love.window.getHeight() / 2 - 50, love.window.getWidth(), "center")
 
 			love.graphics.setFont(subheadingFont)
 			love.graphics.printf("(Press start to play again)", 0, love.window.getHeight() / 2 + 50, love.window.getWidth(), "center")
 
-			love.graphics.setFont(defaultFont)
+			screens:setDefaultFont()
 		end
 	end)
 
