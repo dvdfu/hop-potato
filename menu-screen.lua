@@ -14,7 +14,7 @@ function MenuScreen:initialize()
 	joysticks = {}
 	self.dict = Dictionary:new()
 	for i=1,8 do
-		joysticks[i] = { ready = false, controller = nil, joystick = nil, name = generateName(self.dict), timer = 0 }
+		joysticks[i] = { ready = false, controller = nil, joystick = nil, name = self.dict:generateName(), timer = 0 }
 	end
 
 	self.jsCount = love.joystick.getJoystickCount()
@@ -67,7 +67,7 @@ function MenuScreen:update(dt)
 						joysticks[i].timer = 0
 					end
 				elseif joysticks[i].controller:selectButton() then
-					joysticks[i].name = generateName(self.dict)
+					joysticks[i].name = self.dict:generateName()
 					joysticks[i].ready = false
 					joysticks[i].timer = 0
 				end
@@ -146,12 +146,6 @@ function MenuScreen:drawPlayerScreens()
 	end
 end
 
-function generateName(dict)
-	local n1 = math.random(1, dict:dictLength())
-	local n2 = math.random(1, dict:dictLength())
-	return firstToUpper(dict:get()[n1]) .. ' ' .. firstToUpper(dict:get()[n2])
-end
-
 function updateJSTimer(dt)
 	if joysticks ~= nil then
 		table.foreach(joysticks, function (i)
@@ -169,19 +163,15 @@ function resetJSTimer()
 end
 
 function allJSTimerAbove(num)
-	local bool = true
+	local ret = true
 	if joysticks ~= nil then
 		table.foreach(joysticks, function (i)
 			if joysticks[i].timer < num then
-				bool =  false
+				ret =  false
 			end
 		end)
 	end
-	return bool
-end
-
-function firstToUpper(str)
-	return (str:gsub("^%l", string.upper))
+	return ret
 end
 
 function gPrint(...)

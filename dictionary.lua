@@ -1,7 +1,7 @@
 Dictionary = Class('Dictionary')
 
 function Dictionary:initialize()
-  file = 'lib/dictionary.txt'
+  local file = 'lib/dictionary.txt'
   self.dict = {}
   self.length = 0
   for line in io.lines(file) do
@@ -11,12 +11,14 @@ function Dictionary:initialize()
   print('dict is ' .. self.length)
 end
 
-function Dictionary:get()
-  return self.dict
+function Dictionary:generateName()
+  local n1 = math.random(1, self.length)
+  local n2 = math.random(1, self.length)
+  return firstToUpper(self.dict[n1]) .. ' ' .. firstToUpper(self.dict[n2])
 end
 
-function Dictionary:dictLength()
-  return self.length
+function Dictionary:firstToUpper(str)
+  return (str:gsub("^%l", string.upper))
 end
 
 return Dictionary
