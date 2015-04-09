@@ -7,8 +7,7 @@ Player.static.move_vel = 4
 Player.static.jump_vel = 12
 Player.static.gravity = 0.3
 
-function Player:initialize(num, name)
-	self.name = name
+function Player:initialize(num)
 	self.num = num
 	self.vx = 0
 	self.vy = 0
@@ -208,10 +207,6 @@ function Player:respawn()
 	self.x = math.random(0, love.window.getWidth())
 	self.y = 20
 	self.vy = 0
-end
-
-function Player:getName()
-	return self.name
 end
 
 return Player

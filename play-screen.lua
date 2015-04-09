@@ -16,7 +16,7 @@ function PlayScreen:initialize()
 	table.foreach(joysticks, function (i)
 		if joysticks[i].controller ~= nil and joysticks[i].ready then
 			numPlayers = numPlayers + 1
-			players[numPlayers] = Player:new(i, joysticks[i].name)
+			players[numPlayers] = Player:new(i)
 		end
 	end)
 	carrier = players[math.floor(math.random(numPlayers))]
