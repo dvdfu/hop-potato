@@ -8,8 +8,9 @@ function MenuScreen:initialize()
 	self.startTimerThreshhold = 2
 	self.playersConfigured = false
 	self.subTitle = 'DON\'T STEP IN THE LAVA AND MAKE SURE TO GET RID OF THE POTATO'
-	self.readyText = 'Press any button to lock in...'
+	self.readyText = 'Press start to lock in...'
 	self.gameOverText = 'Game over...'
+	self.controllerText = 'Plug in a controller to begin...'
 
 	joysticks = {}
 	self.dict = Dictionary:new()
@@ -30,8 +31,9 @@ function MenuScreen:initialize()
 	local img = love.graphics.newImage('img/player.png')
 	self.sprite = newAnimation(img, 16, 16, 0.5, 0)
 
-	self.font = love.graphics.newFont("font/Retro Computer_DEMO.ttf", 15)
+	self.font = love.graphics.newFont("font/Retro Computer_DEMO.ttf", 14)
 	love.graphics.setFont(self.font);
+	self.readyTextTime = 0.25
 end
 
 function MenuScreen:update(dt)
@@ -39,6 +41,7 @@ function MenuScreen:update(dt)
 	local secondStartPressed = false
 
 	updateJSTimer(dt)
+	self.readyTextTime = self.readyTextTime + dt
 
 	local curJS = love.joystick.getJoysticks()
 	local curJSCount = love.joystick.getJoystickCount()
@@ -82,7 +85,12 @@ function MenuScreen:update(dt)
 end
 
 function MenuScreen:draw()
+	self.font = love.graphics.newFont("font/Retro Computer_DEMO.ttf", 20)
+	love.graphics.setFont(self.font);
 	gPrint(self.subTitle, love.graphics.getWidth()/2 - self.font:getWidth(self.subTitle) / 2, love.graphics.getHeight()/4)
+	self.font = love.graphics.newFont("font/Retro Computer_DEMO.ttf", 14)
+	love.graphics.setFont(self.font);
+
 	if self.playersConfigured then
 		self:drawGameOver()
 	else
@@ -118,6 +126,9 @@ function MenuScreen:drawPlayerScreens()
 	local readyTextHeight = self.font:getHeight(self.readyText)
 	local spriteHeight = self.sprite:getHeight()
 
+	local controllerTextWidth = self.font:getWidth(self.controllerText)
+	local controllerTextHeight = self.font:getHeight(self.controllerText)
+
 	for i = 1, jsCount, 1 do
 		local bottomMargin = 10
 		local height = love.graphics.getHeight()/4-10
@@ -131,17 +142,24 @@ function MenuScreen:drawPlayerScreens()
 
 		gRec('line', 10+((i-1)%halfJsCount)*x*2, love.graphics.getHeight() - y, width, height)
 
-		if joysticks ~= nil and joysticks[i] ~= nil and joysticks[i].ready then
-			local usernameWidth = self.font:getWidth(joysticks[i].name.. ' ready!')
-			local usernameHeight = self.font:getHeight(joysticks[i].name.. ' ready!')
-			gPrint(joysticks[i].name.. ' ready!', 10+((i-1)%halfJsCount)*x*2 + width/2 - usernameWidth / 2, love.graphics.getHeight() - y + usernameHeight + height/2)
-			local r, g, b, a = love.graphics.getColor()
-			local colorR, colorG, colorB = getPlayerColor(i)
-			love.graphics.setColor(colorR, colorG, colorB, 255)
-			self.sprite:draw(10+((i-1)%halfJsCount)*x*2 + width/2 - spriteWidth/2, love.graphics.getHeight() - y - spriteHeight - 10 + height / 2, 0, 2, 2)
-			love.graphics.setColor(r, g, b, a)
-		else
-			gPrint(self.readyText, 10+((i-1)%halfJsCount)*x*2 + width/2 - readyTextWidth/2, love.graphics.getHeight() - y - readyTextHeight + height/2)
+		if joysticks ~= nil and joysticks[i] ~= nil then
+			if joysticks[i].ready then
+				local usernameWidth = self.font:getWidth(joysticks[i].name.. ' ready!')
+				local usernameHeight = self.font:getHeight(joysticks[i].name.. ' ready!')
+				gPrint(joysticks[i].name.. ' ready!', 10+((i-1)%halfJsCount)*x*2 + width/2 - usernameWidth / 2, love.graphics.getHeight() - y + usernameHeight + height/2)
+				local r, g, b, a = love.graphics.getColor()
+				local colorR, colorG, colorB = getPlayerColor(i)
+				love.graphics.setColor(colorR, colorG, colorB, 255)
+				self.sprite:draw(10+((i-1)%halfJsCount)*x*2 + width/2 - spriteWidth/2, love.graphics.getHeight() - y - spriteHeight - 10 + height / 2, 0, 2, 2)
+				love.graphics.setColor(r, g, b, a)
+			elseif joysticks[i].controller == nil then
+				gPrint(self.controllerText, 10+((i-1)%halfJsCount)*x*2 + width/2 - controllerTextWidth/2, love.graphics.getHeight() - y - controllerTextHeight + height/2)
+			elseif self.readyTextTime >= 0.25 then
+				gPrint(self.readyText, 10+((i-1)%halfJsCount)*x*2 + width/2 - readyTextWidth/2, love.graphics.getHeight() - y - readyTextHeight + height/2)
+				if self.readyTextTime >= 1 then
+					self.readyTextTime = 0
+				end
+			end
 		end
 	end
 end

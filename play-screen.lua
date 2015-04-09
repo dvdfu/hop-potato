@@ -82,7 +82,7 @@ function PlayScreen:update(dt)
 	table.foreach(players, function (i)
 		players[i].crown = players[i].timer:getTime() == highscore
 	end)
-	
+
 	potato:update(dt)
 end
 
@@ -90,10 +90,6 @@ function PlayScreen:draw()
 	table.foreach(platforms, function (i)
 		platforms[i]:draw()
 	end)
-
-	for i, joystick in ipairs(love.joystick.getJoysticks()) do
-		love.graphics.print(joystick:getName(), 10, i * 20)
-	end
 
 	table.foreach(players, function (i)
 		players[i]:draw()
