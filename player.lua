@@ -201,8 +201,8 @@ function Player:draw()
 			love.graphics.draw(self.crownSprite, self.x - love.graphics.getWidth(), self.y - 18, 0, 2, 2)
 		end
 	end
-	self.timer:draw(self.x, self.y - 32, 32)
-	self.timer:draw(self.x - love.graphics.getWidth(), self.y - 32, 32)
+	self.timer:draw(self.x, self.y - 33, 32)
+	self.timer:draw(self.x - love.graphics.getWidth(), self.y - 33, 32)
 end
 
 function Player:respawn()

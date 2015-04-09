@@ -2,9 +2,6 @@ class = require 'lib.middleclass'
 Timer = class('Timer')
 
 function Timer:initialize(start)
-	font = love.graphics.newFont(14)
-	love.graphics.setFont(font)
-
 	self.time = start
 end
 
@@ -17,6 +14,10 @@ function Timer:update(dt)
 end
 
 function Timer:draw(x, y, textWidth)
+	-- font = love.graphics.newFont("font/Minecraftia-Regular.ttf", 32)
+	local font = love.graphics.newFont("font/Retro Computer_DEMO.ttf", 24)
+	love.graphics.setFont(font)
+
 	love.graphics.printf(string.format("%i", math.ceil(self.time)), x, y, textWidth, "center")
 end
 

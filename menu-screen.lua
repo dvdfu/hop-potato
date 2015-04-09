@@ -30,7 +30,7 @@ function MenuScreen:initialize()
 	local img = love.graphics.newImage('img/player.png')
 	self.sprite = newAnimation(img, 16, 16, 0.5, 0)
 
-	self.font = love.graphics.newFont( 16 )
+	self.font = love.graphics.newFont("font/Retro Computer_DEMO.ttf", 15)
 	love.graphics.setFont(self.font);
 end
 
