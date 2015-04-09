@@ -16,7 +16,7 @@ function PlayScreen:initialize()
 	table.foreach(joysticks, function (i)
 		if joysticks[i].controller ~= nil and joysticks[i].ready then
 			numPlayers = numPlayers + 1
-			players[numPlayers] = Player:new(i)
+			players[numPlayers] = Player:new(i, joysticks[i].name)
 		end
 	end)
 	carrier = players[math.floor(math.random(numPlayers))]
@@ -59,7 +59,6 @@ function PlayScreen:update(dt)
 		platforms[i]:update(dt)
 	end)
 
-	local tempWinner = 0
 	table.foreach(players, function (i)
 		players[i]:update(dt)
 
@@ -80,8 +79,7 @@ function PlayScreen:draw()
 		platforms[i]:draw()
 	end)
 
-	local joysticks = love.joystick.getJoysticks()
-	for i, joystick in ipairs(joysticks) do
+	for i, joystick in ipairs(love.joystick.getJoysticks()) do
 		love.graphics.print(joystick:getName(), 10, i * 20)
 	end
 
@@ -90,15 +88,15 @@ function PlayScreen:draw()
 
 		if winner ~= 0 then
 			love.graphics.setFont(gameOverFont)
-			love.graphics.printf("PLAYER " .. winner .. " WINS!", 0, love.window.getHeight() / 2 - 50, love.window.getWidth(), "center")
+			love.graphics.printf(joysticks[winner].name .. " WINS!", 0, love.window.getHeight() / 2 - 50, love.window.getWidth(), "center")
 
-			love.graphics.setFont(subheadingFont)	
+			love.graphics.setFont(subheadingFont)
 			love.graphics.printf("(Press start to play again)", 0, love.window.getHeight() / 2 + 50, love.window.getWidth(), "center")
 
 			love.graphics.setFont(defaultFont)
 		end
 	end)
-	
+
 	potato:draw()
 
 	love.graphics.setBlendMode('additive')
