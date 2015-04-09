@@ -3,19 +3,20 @@ Potato = Class('Potato')
 function Potato:initialize()
 	self.sprite = love.graphics.newImage('img/potato.png')
 	self.x, self.y = carrier.x, carrier.y
-	self.w, self.h = 32, 32
+	self.w, self.h = 56, 56
 	self.vx, self.vy = 0, 0
 	self.rotation = 0
+	self.dead = false
 
 	--fire particles
 	self.fireSprite = love.graphics.newImage('img/flame.png')
-	self.fire = love.graphics.newParticleSystem(self.fireSprite, 200)
-	self.fire:setAreaSpread('normal', 6, 4)
+	self.fire = love.graphics.newParticleSystem(self.fireSprite, 1000)
+	self.fire:setAreaSpread('normal', 12, 6)
 	self.fire:setParticleLifetime(0.1, 0.15)
 	self.fire:setDirection(-math.pi / 2)
-	self.fire:setSpeed(160, 300)
+	self.fire:setSpeed(200, 500)
 	self.fire:setColors(255, 0, 0, 255, 255, 120, 0, 255, 255, 200, 0, 255)
-	self.fire:setEmissionRate(200)
+	self.fire:setEmissionRate(400)
 	self.fire:setSizes(1.5, 0.5)
 
 	--explosion particles
@@ -36,6 +37,7 @@ function Potato:initialize()
 	jump = love.audio.newSource("sfx/jump.wav")
 	hit = love.audio.newSource("sfx/hit.wav")
 	death = love.audio.newSource("sfx/death.wav")
+	explode = love.audio.newSource("sfx/explode.wav")
 end
 
 --define collision properties
@@ -109,7 +111,7 @@ function Potato:update(dt)
 		self.vx, self.vy = 0, 0
 		local xOffset = carrier.controller:rightAnalogX() * 64
 		local yOffset = carrier.controller:rightAnalogY() * 64
-		self.x, self.y = carrier.x + xOffset, carrier.y + yOffset
+		self.x, self.y = carrier.x + xOffset + carrier.w / 2 - self.w / 2, carrier.y + yOffset + carrier.h / 2 - self.h / 2
 		if carrier.controller:rightBumper() then
 			if not carrier.respawning and xOffset * yOffset ~= 0 then
 				nocol = true
@@ -122,14 +124,16 @@ function Potato:update(dt)
 		end
 	end
 
-	self.x, self.y = self.x + (32 - self.w) / 2, self.y + (32 - self.h) / 2
 	--wrap around room
 	if self.y + self.vy < 0 then
 		self.y = 0
 		self.vy = -self.vy
 	elseif self.y  + self.vy > lavaLevel then
 		if numAlive == 0 then
-			self:explode()
+			if not self.dead then
+				self:explode()
+				self.dead = true
+			end
 		else
 			self:attach(owner)
 			nocol = true;
@@ -169,6 +173,7 @@ end
 function Potato:explode()
 	self.explosion:setPosition(self.x + self.w / 2, self.y + self.h / 2)
 	self.explosion:emit(600)
+	explode:play()
 end
 
 

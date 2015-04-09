@@ -13,6 +13,7 @@ function Player:initialize(num)
 	self.vy = 0
 	self.w = 32
 	self.h = 32
+	self.crown = false
 
 	self:respawn()
 	self.controller = Controller:new(num)
@@ -74,7 +75,7 @@ function Player:initialize(num)
 	death = love.audio.newSource("sfx/death.wav")
 	local img = love.graphics.newImage('img/player.png')
 	self.sprite = newAnimation(img, 16, 16, 0.5, 0)
-
+	self.crownSprite = love.graphics.newImage('img/crown.png')
 end
 
 --define collision properties
@@ -128,7 +129,7 @@ function Player:update(dt)
 	--movement
 	local speedBoost = 0
 	if owner == self then
-		speedBoost = 0.8
+		speedBoost = 1.5
 	end
 	self.vx = self.controller:leftAnalogX() * (Player.move_vel + speedBoost)
 
@@ -194,9 +195,14 @@ function Player:draw()
 		self.sprite:draw(self.x, self.y, 0, 2, 2)
 		self.sprite:draw(self.x - love.graphics.getWidth(), self.y, 0, 2, 2)
 		love.graphics.setColor(255, 255, 255, 255)
+
+		if self.crown then
+			love.graphics.draw(self.crownSprite, self.x, self.y - 18, 0, 2, 2)
+			love.graphics.draw(self.crownSprite, self.x - love.graphics.getWidth(), self.y - 18, 0, 2, 2)
+		end
 	end
-	self.timer:draw(self.x, self.y - 25, 32)
-	self.timer:draw(self.x - love.graphics.getWidth(), self.y - 25, 32)
+	self.timer:draw(self.x, self.y - 32, 32)
+	self.timer:draw(self.x - love.graphics.getWidth(), self.y - 32, 32)
 end
 
 function Player:respawn()
