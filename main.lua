@@ -7,7 +7,7 @@ screens = {}
 
 function screens:enterScreen(screen)
 	screenNum = screenNum + 1
-	screens[screenNum] = screen:new()
+	screens[screenNum] = screen
 end
 
 function screens:exitScreen()
@@ -34,14 +34,14 @@ end
 function love.load()
 	math.randomseed(os.time())
 	love.graphics.setDefaultFilter('nearest', 'nearest')
-	love.graphics.setBackgroundColor(60, 50, 40)
+	love.graphics.setBackgroundColor(50, 50, 40)
 
 	font = love.graphics.newImageFont("img/font.png", " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/():;%&`'*#=[]\"")
 	-- font.setWidth(4)
 	love.graphics.setFont(font)
 
 	screenNum = 0
-	screens:enterScreen(MenuScreen)
+	screens:enterScreen(MenuScreen:new())
 end
 
 function love.update(dt)

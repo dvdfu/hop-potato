@@ -6,7 +6,7 @@ Potato = require 'potato'
 
 PlayScreen = Class('PlayScreen')
 
-function PlayScreen:initialize()
+function PlayScreen:initialize(lastWinner)
 	--consts
 	lavaLevel = love.graphics.getHeight()
 
@@ -19,7 +19,11 @@ function PlayScreen:initialize()
 			players[numPlayers] = Player:new(i)
 		end
 	end)
-	carrier = players[math.floor(math.random(numPlayers))]
+	if lastWinner == nil then
+		carrier = players[math.floor(math.random(numPlayers))]
+	else
+		carrier = players[lastWinner]
+	end
 	owner = carrier
 	carrierTime = 0
 	platforms = {}
@@ -32,7 +36,6 @@ function PlayScreen:initialize()
 	music = love.audio.newSource("sfx/yakety-sax.mp3")
 	music:setLooping(true)
 	-- music:play()
-	rippleShader = love.graphics.newShader('data/ripple.glsl')
 
 	gameOverFont = love.graphics.newFont(36)
 	subheadingFont = love.graphics.newFont(24)
@@ -71,7 +74,7 @@ function PlayScreen:update(dt)
 		end
 
 		if winner ~= 0 and players[i].controller:startButton() then
-			screens:changeScreen(PlayScreen)
+			screens:changeScreen(PlayScreen:new(winner))
 		end
 	end)
 
@@ -84,7 +87,6 @@ function PlayScreen:update(dt)
 end
 
 function PlayScreen:draw()
-	love.graphics.setShader(rippleShader)
 	table.foreach(platforms, function (i)
 		platforms[i]:draw()
 	end)
@@ -111,9 +113,6 @@ function PlayScreen:draw()
 	potato:draw()
 
 	love.graphics.setBlendMode('additive')
-	-- love.graphics.setColor(255, 0, 0, 255)
-	-- love.graphics.rectangle('fill', 0, lavaLevel, love.graphics.getWidth(), 64)
-	-- love.graphics.setColor(255, 255, 255, 255)
 	love.graphics.draw(self.fire)
 	love.graphics.setBlendMode('alpha')
 end

@@ -78,7 +78,7 @@ function MenuScreen:update(dt)
 			if joysticks[i].ready then startGame = startGame + 1 end
 		end)
 	end
-	if startGame >= 2 and secondStartPressed then screens:enterScreen(PlayScreen) end
+	if startGame >= 2 and secondStartPressed then screens:enterScreen(PlayScreen:new()) end
 end
 
 function MenuScreen:draw()
