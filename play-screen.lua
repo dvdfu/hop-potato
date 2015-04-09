@@ -36,8 +36,8 @@ function PlayScreen:initialize(lastWinner)
 	music:setLooping(true)
 	-- music:play()
 
-	gameOverFont = love.graphics.newFont(36)
-	subheadingFont = love.graphics.newFont(24)
+	gameOverFont = love.graphics.newFont("font/Retro Computer_DEMO.ttf", 48)
+	subheadingFont = love.graphics.newFont("font/Retro Computer_DEMO.ttf", 24)
 	defaultFont = love.graphics.newFont(14)
 
 	--fire configuration
@@ -98,8 +98,10 @@ function PlayScreen:draw()
 	love.graphics.setBlendMode('additive')
 	love.graphics.draw(self.fire)
 	love.graphics.setBlendMode('alpha')
-	
+
 	if winner ~= 0 then
+		love.graphics.setColor(0, 0, 0, 200)
+		love.graphics.rectangle('fill', 200, 400, love.window.getWidth() - 400, love.window.getHeight() - 760)
 		love.graphics.setColor(players[winner].colorR, players[winner].colorG, players[winner].colorB, 255)
 		love.graphics.setFont(gameOverFont)
 		love.graphics.printf(joysticks[winner].name .. " WINS!", 0, love.window.getHeight() / 2 - 30, love.window.getWidth(), "center")
