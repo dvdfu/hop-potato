@@ -74,12 +74,12 @@ function Potato:update(dt)
 	self.explosion:update(dt)
 
 	if carrier ~= nil and not carrier.alive then	
-		local max = 0
+		local maxTime = 0
 		local maxPlayer = nil
 
 		table.foreach(players, function (i)
-			if players[i].alive and players[i].timer:getTime() >= max then
-				max = players[i].timer:getTime() 
+			if players[i].alive and players[i].timer:getTime() >= maxTime then
+				maxTime = players[i].timer:getTime() 
 				maxPlayer = i				
 			end
 		end)
