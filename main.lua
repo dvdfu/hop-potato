@@ -1,6 +1,7 @@
 Class = require 'lib.middleclass'
 PlayScreen = require 'play-screen'
 MenuScreen = require 'menu-screen'
+TestScreen = require 'test-screen'
 
 screens = {}
 
@@ -34,7 +35,7 @@ function love.load()
 	love.graphics.setFont(font)
 
 	screenNum = 0
-	screens:enterScreen(MenuScreen)
+	screens:enterScreen(TestScreen)
 end
 
 function love.update(dt)
