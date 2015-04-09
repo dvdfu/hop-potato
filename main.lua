@@ -25,6 +25,12 @@ function screens:changeScreen(screen)
 	screens:enterScreen(screen)
 end
 
+function screens:setDefaultFont()
+	love.graphics.setColor(255, 255, 255, 255)
+	self.font = love.graphics.newFont("font/Retro Computer_DEMO.ttf", 15)
+	love.graphics.setFont(self.font);
+end
+
 function love.load()
 	math.randomseed(os.time())
 	love.graphics.setDefaultFilter('nearest', 'nearest')
