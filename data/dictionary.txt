@@ -1,4 +1,6 @@
 *
+!
+?
 a
 abbreviate
 abbreviated
@@ -74,7 +76,6 @@ amnesia
 amy
 an
 ana
-anal
 and
 android
 angel
@@ -92,7 +93,6 @@ answering
 answers
 ant
 antarctica
-anus
 any
 anybody
 anymore
@@ -1480,7 +1480,6 @@ nice
 nicer
 nick
 nickname
-nigger
 night
 nighttime
 nine
@@ -1599,7 +1598,6 @@ peanut
 pee
 peeps
 penguins
-penis
 people
 peoples
 per
@@ -1746,9 +1744,6 @@ random
 randomized
 randomly
 rap
-rape
-raped
-rapist
 rat
 rate
 rather
@@ -2330,8 +2325,6 @@ users
 uses
 using
 usually
-vagina
-vaginas
 value
 vampire
 van

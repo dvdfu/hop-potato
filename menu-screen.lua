@@ -32,6 +32,7 @@ function MenuScreen:initialize()
 
 	self.font = love.graphics.newFont("font/Retro Computer_DEMO.ttf", 15)
 	love.graphics.setFont(self.font);
+	self.readyTextTime = 1
 end
 
 function MenuScreen:update(dt)
@@ -39,6 +40,7 @@ function MenuScreen:update(dt)
 	local secondStartPressed = false
 
 	updateJSTimer(dt)
+	self.readyTextTime = self.readyTextTime + dt
 
 	local curJS = love.joystick.getJoysticks()
 	local curJSCount = love.joystick.getJoystickCount()
@@ -140,8 +142,11 @@ function MenuScreen:drawPlayerScreens()
 			love.graphics.setColor(colorR, colorG, colorB, 255)
 			self.sprite:draw(10+((i-1)%halfJsCount)*x*2 + width/2 - spriteWidth/2, love.graphics.getHeight() - y - spriteHeight - 10 + height / 2, 0, 2, 2)
 			love.graphics.setColor(r, g, b, a)
-		else
+		elseif self.readyTextTime >= 1 then
 			gPrint(self.readyText, 10+((i-1)%halfJsCount)*x*2 + width/2 - readyTextWidth/2, love.graphics.getHeight() - y - readyTextHeight + height/2)
+			if self.readyTextTime >= 2 then
+				self.readyTextTime = 0
+			end
 		end
 	end
 end
