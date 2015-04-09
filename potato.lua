@@ -6,7 +6,6 @@ function Potato:initialize()
 	self.w, self.h = 32, 32
 	self.vx, self.vy = 0, 0
 	self.rotation = 0
-	self.dead = false
 
 	--fire particles
 	self.fireSprite = love.graphics.newImage('img/flame.png')
@@ -22,12 +21,12 @@ function Potato:initialize()
 	--explosion particles
 	self.explosionSprite = love.graphics.newImage('img/particle.png')
 	self.explosion = love.graphics.newParticleSystem(self.explosionSprite, 1000)
-	self.explosion:setAreaSpread('normal', 0, 0)
-	self.explosion:setParticleLifetime(2, 3)
+	self.explosion:setAreaSpread('normal', 30, 30)
+	self.explosion:setParticleLifetime(0, 0.6)
 	self.explosion:setSpread(math.pi * 2)
-	self.explosion:setSpeed(200, 300)
-	self.explosion:setColors(160, 160, 160, 255)
-	self.explosion:setSizes(5, 3)
+	self.explosion:setSpeed(250, 450)
+	self.explosion:setColors(255, 255, 255, 255, 255, 255, 0, 255, 255, 30, 0, 255, 100, 100, 100, 255)
+	self.explosion:setSizes(3, 0)
 
 	self.name = 'potato'
 	world:add(self, self.x, self.y, self.w, self.h)
@@ -121,11 +120,15 @@ function Potato:update(dt)
 		self.y = 0
 		self.vy = -self.vy
 	elseif self.y  + self.vy > lavaLevel then
-		self:attach(owner)
-		nocol = true;
-		death:play()
-		self.y = 0
-		self.vy = -self.vy
+		if numAlive == 0 then
+			self:explode()
+		else
+			self:attach(owner)
+			nocol = true;
+			death:play()
+			self.y = lavaLevel - self.h
+			self.vy = -self.vy
+		end
 	end
 	if self.x > love.window.getWidth() then
 		self.x = self.x - love.window.getWidth()
@@ -143,13 +146,26 @@ function Potato:update(dt)
 	end
 
 	--timer out
-	if carrier ~= nil and carrier.timer:getTime() == 0 and not self.dead then
-		-- self.explosion:emit(500)
-		self.dead = true
+	if carrier ~= nil and carrier.timer:getTime() == 0 then
+		local xOffset = carrier.controller:rightAnalogX() * 64
+		local yOffset = carrier.controller:rightAnalogY() * 64
+		self.x, self.y = carrier.x + xOffset, carrier.y + yOffset
+		self:explode()
+
+		carrier.alive = false
+		world:remove(carrier)
+		numAlive = numAlive - 1
 	end
 end
 
+function Potato:explode()
+	self.explosion:setPosition(self.x + self.w / 2, self.y + self.h / 2)
+	self.explosion:emit(600)
+end
+
+
 function Potato:attach(player)
+	if player == nil then return end
 	carrier = player
 	if carrier ~= nil then
 		owner = player
@@ -161,9 +177,10 @@ function Potato:draw()
 	love.graphics.setBlendMode('screen')
 	love.graphics.draw(self.fire)
 	love.graphics.draw(self.fire, -love.graphics.getWidth())
-	love.graphics.setBlendMode('alpha')
 	love.graphics.draw(self.explosion)
 	love.graphics.draw(self.explosion, -love.graphics.getWidth())
+	love.graphics.setBlendMode('alpha')
+
 	love.graphics.draw(self.sprite, self.x + self.w / 2, self.y + self.h / 2, self.rotation, self.w / 16, self.h / 16, 8, 8)
 	love.graphics.draw(self.sprite, self.x + self.w / 2 - love.graphics.getWidth(), self.y + self.h / 2, self.rotation, self.w / 16, self.h / 16, 8, 8)
 end

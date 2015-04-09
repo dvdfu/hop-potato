@@ -35,7 +35,7 @@ function love.load()
 	love.graphics.setFont(font)
 
 	screenNum = 0
-	screens:enterScreen(TestScreen)
+	screens:enterScreen(MenuScreen)
 end
 
 function love.update(dt)
