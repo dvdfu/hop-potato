@@ -208,7 +208,6 @@ end
 function Player:respawn()
 	carrier = self
 	owner = carrier
-	carrierTime = 0
 	self.respawnTime = 2
 	self.x = math.random(0, love.window.getWidth())
 	self.y = 20

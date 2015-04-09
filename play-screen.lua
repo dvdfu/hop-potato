@@ -25,7 +25,6 @@ function PlayScreen:initialize(lastWinner)
 		carrier = players[lastWinner]
 	end
 	owner = carrier
-	carrierTime = 0
 	platforms = {}
 	local numPlatforms = love.graphics.getWidth() * love.graphics.getHeight() / 50000
 	for i = 0, numPlatforms, 1 do platforms[i] = Platform:new() end
@@ -57,7 +56,6 @@ end
 function PlayScreen:update(dt)
 	self.fire:update(dt)
 	Flux.update(dt)
-	carrierTime = carrierTime + dt
 	table.foreach(platforms, function (i)
 		platforms[i]:update(dt)
 	end)
@@ -93,17 +91,6 @@ function PlayScreen:draw()
 
 	table.foreach(players, function (i)
 		players[i]:draw()
-
-		if winner ~= 0 then
-			love.graphics.setColor(players[winner].colorR, players[winner].colorG, players[winner].colorB, 255)
-			love.graphics.setFont(gameOverFont)
-			love.graphics.printf(joysticks[winner].name .. " WINS!", 0, love.window.getHeight() / 2 - 50, love.window.getWidth(), "center")
-
-			love.graphics.setFont(subheadingFont)
-			love.graphics.printf("(Press start to play again)", 0, love.window.getHeight() / 2 + 50, love.window.getWidth(), "center")
-
-			screens:setDefaultFont()
-		end
 	end)
 
 	potato:draw()
@@ -111,6 +98,17 @@ function PlayScreen:draw()
 	love.graphics.setBlendMode('additive')
 	love.graphics.draw(self.fire)
 	love.graphics.setBlendMode('alpha')
+	
+	if winner ~= 0 then
+		love.graphics.setColor(players[winner].colorR, players[winner].colorG, players[winner].colorB, 255)
+		love.graphics.setFont(gameOverFont)
+		love.graphics.printf(joysticks[winner].name .. " WINS!", 0, love.window.getHeight() / 2 - 30, love.window.getWidth(), "center")
+
+		love.graphics.setFont(subheadingFont)
+		love.graphics.printf("(Press start to play again)", 0, love.window.getHeight() / 2 + 30, love.window.getWidth(), "center")
+
+		screens:setDefaultFont()
+	end
 end
 
 function PlayScreen:onClose()

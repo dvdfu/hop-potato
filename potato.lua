@@ -52,12 +52,12 @@ function Potato:collide()
 	self.x, self.y = actualX, actualY
 	for i = 1, len do
 		local col = cols[i]
-		if col.other.name == 'player' and col.other ~= carrier and carrierTime > 1 then
+		if col.other.name == 'player' and col.other ~= carrier then
 			self:attach(col.other)
 			hit:play()
 		elseif carrier == nil and col.other.name == 'platform' and col.normal.y == -1 then
 			self.y = col.other.y - self.h
-			self.vy = -8
+			self.vy = -self.vy * 0.8
 			col.other:leaveDust(self.x + self.w / 2, self.y + self.h)
 			col.other:move()
 			jump:play()
@@ -117,8 +117,8 @@ function Potato:update(dt)
 				nocol = true
 				carrier = nil
 				local angle = math.atan2(yOffset, xOffset)
-				self.vx = math.cos(angle) * 25
-				self.vy = math.sin(angle) * 25
+				self.vx = math.cos(angle) * 30
+				self.vy = math.sin(angle) * 30
 				throw:play()
 			end
 		end
@@ -183,7 +183,6 @@ function Potato:attach(player)
 	if carrier ~= nil then
 		owner = player
 	end
-	carrierTime = 0
 end
 
 function Potato:draw()
