@@ -3,7 +3,7 @@ Potato = Class('Potato')
 function Potato:initialize()
 	self.sprite = love.graphics.newImage('img/potato.png')
 	self.x, self.y = carrier.x, carrier.y
-	self.w, self.h = 48, 48
+	self.w, self.h = 56, 56
 	self.vx, self.vy = 0, 0
 	self.rotation = 0
 	self.dead = false

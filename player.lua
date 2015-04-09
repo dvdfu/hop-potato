@@ -129,7 +129,7 @@ function Player:update(dt)
 	--movement
 	local speedBoost = 0
 	if owner == self then
-		speedBoost = 0.8
+		speedBoost = 1.5
 	end
 	self.vx = self.controller:leftAnalogX() * (Player.move_vel + speedBoost)
 
