@@ -1,6 +1,7 @@
 Class = require 'lib.middleclass'
 PlayScreen = require 'play-screen'
 MenuScreen = require 'menu-screen'
+TestScreen = require 'test-screen'
 
 screens = {}
 
