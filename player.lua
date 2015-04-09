@@ -75,7 +75,7 @@ function Player:initialize(num)
 	death = love.audio.newSource("sfx/death.wav")
 	local img = love.graphics.newImage('img/player.png')
 	self.sprite = newAnimation(img, 16, 16, 0.5, 0)
-
+	self.crownSprite = love.graphics.newImage('img/crown.png')
 end
 
 --define collision properties
@@ -194,14 +194,12 @@ function Player:draw()
 		love.graphics.setColor(self.colorR, self.colorG, self.colorB, 255)
 		self.sprite:draw(self.x, self.y, 0, 2, 2)
 		self.sprite:draw(self.x - love.graphics.getWidth(), self.y, 0, 2, 2)
+		love.graphics.setColor(255, 255, 255, 255)
 
 		if self.crown then
-			love.graphics.setColor(255, 160, 0)
-			love.graphics.rectangle('fill', self.x, self.y - 8, self.w, 8)
-			love.graphics.rectangle('fill', self.x - love.graphics.getWidth(), self.y - 8, self.w, 8)
+			love.graphics.draw(self.crownSprite, self.x, self.y - 16, self.w, 32)
+			love.graphics.draw(self.crownSprite - love.graphics.getWidth(), self.x, self.y - 16, self.w, 32)
 		end
-
-		love.graphics.setColor(255, 255, 255, 255)
 	end
 	self.timer:draw(self.x, self.y - 25, 32)
 	self.timer:draw(self.x - love.graphics.getWidth(), self.y - 25, 32)
