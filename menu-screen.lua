@@ -1,27 +1,31 @@
 PlayScreen = require 'play-screen'
 Controller = require 'controller'
+Dictionary = require 'dictionary'
 
 MenuScreen = Class('MenuScreen')
 
 function MenuScreen:initialize()
-	self.startTimer = 0
+	self.startTimerThreshhold = 2
 	self.playersConfigured = false
 	self.subTitle = 'DON\'T STEP IN THE LAVA AND MAKE SURE TO GET RID OF THE POTATO'
 	self.readyText = 'Press any button to lock in...'
 	self.gameOverText = 'Game over...'
 
 	joysticks = {}
+	self.dict = Dictionary:new()
 	for i=1,8 do
-		joysticks[i] = { ready = false, controller = nil, joystick = nil }
+		joysticks[i] = { ready = false, controller = nil, joystick = nil, name = self.dict:generateName(), timer = 0 }
 	end
 
 	self.jsCount = love.joystick.getJoystickCount()
 	print('js connected: ' .. self.jsCount)
-	local curJS = love.joystick.getJoysticks()
-	table.foreach(curJS, function (i)
-		joysticks[i].controller = Controller:new(i)
-		joysticks[i].joystick = curJS[i]
-	end)
+	if self.jsCount > 0 then
+		local curJS = love.joystick.getJoysticks()
+		table.foreach(curJS, function (i)
+			joysticks[i].controller = Controller:new(i)
+			joysticks[i].joystick = curJS[i]
+		end)
+	end
 
 	local img = love.graphics.newImage('img/player.png')
 	self.sprite = newAnimation(img, 16, 16, 0.5, 0)
@@ -33,45 +37,47 @@ end
 function MenuScreen:update(dt)
 	local startGame = 0
 	local secondStartPressed = false
-	self.startTimer = self.startTimer + dt
+
+	updateJSTimer(dt)
 
 	local curJS = love.joystick.getJoysticks()
 	local curJSCount = love.joystick.getJoystickCount()
 	if self.jsCount < curJSCount then
 		print('new controller connected')
 
-		for i=self.jsCount,curJSCount do
-			print(i)
+		for i=self.jsCount+1,curJSCount do
+			print('jsCount ' ..i)
 			joysticks[i].controller = Controller:new(i)
 			joysticks[i].joystick = curJS[i]
 		end
 		self.jsCount = curJSCount
-		self.startTimer = 0
+		resetJSTimer()
 	end
 
-	table.foreach(joysticks, function (i)
-		if joysticks[i].controller ~= nil then
-			if joysticks[i].controller:startButton() then
-				if joysticks[i].ready and self.startTimer > 1 then
-					print('Second start pressed, lets start the game!')
-					secondStartPressed = true
-				end
-				joysticks[i].ready = true
-				if self.startTimer > 1 then
-					self.startTimer = 0
-				end
-			elseif joysticks[i].controller:selectButton() then
-				joysticks[i].ready = false
-				if self.startTimer > 1 then
-					self.startTimer = 0
+	if joysticks ~= nil then
+		table.foreach(joysticks, function (i)
+			if joysticks[i].controller ~= nil then
+				if joysticks[i].controller:startButton() then
+					if joysticks[i].ready and allJSTimerAbove(self.startTimerThreshhold) then
+						print('Second start pressed, lets start the game!')
+						secondStartPressed = true
+					end
+					joysticks[i].ready = true
+					if joysticks[i].timer >= self.startTimerThreshhold then
+						joysticks[i].timer = 0
+					end
+				elseif joysticks[i].controller:selectButton() then
+					joysticks[i].name = self.dict:generateName()
+					joysticks[i].ready = false
+					joysticks[i].timer = 0
 				end
 			end
-		end
-	end)
+		end)
 
-	table.foreach(joysticks, function (i)
-		if joysticks[i].ready then startGame = startGame + 1 end
-	end)
+		table.foreach(joysticks, function (i)
+			if joysticks[i].ready then startGame = startGame + 1 end
+		end)
+	end
 	if startGame >= 2 and secondStartPressed then screens:enterScreen(PlayScreen) end
 end
 
@@ -83,16 +89,20 @@ function MenuScreen:draw()
 		self:drawPlayerScreens()
 	end
 	local curJS = love.joystick.getJoysticks()
+	gPrint('curJS', 10, 10)
 	table.foreach(curJS, function (i)
 		if curJS ~= nil then
-			gPrint(curJS[i]:getName(), 10, i * 20)
+			gPrint(curJS[i]:getName(), 10, i * 20 + 10)
 		end
 	end)
-	table.foreach(joysticks, function (i)
-		if joysticks[i].joystick ~= nil then
-			gPrint(joysticks[i].joystick:getName(), 700, i * 20)
-		end
-	end)
+	gPrint('joystick', 700, 10)
+	if joysticks ~= nil then
+		table.foreach(joysticks, function (i)
+			if joysticks[i].joystick ~= nil then
+				gPrint(joysticks[i].joystick:getName(), 700, i * 20+10)
+			end
+		end)
+	end
 end
 
 function MenuScreen:drawPlayerScreens()
@@ -102,11 +112,9 @@ function MenuScreen:drawPlayerScreens()
 	end
 	local halfJsCount = jsCount / 2
 
-	local usernameWidth = self.font:getWidth('Player 8 ready!')
 	local readyTextWidth = self.font:getWidth(self.readyText)
 	local spriteWidth = self.sprite:getWidth()
 
-	local usernameHeight = self.font:getHeight('Player 8 ready!')
 	local readyTextHeight = self.font:getHeight(self.readyText)
 	local spriteHeight = self.sprite:getHeight()
 
@@ -123,8 +131,10 @@ function MenuScreen:drawPlayerScreens()
 
 		gRec('line', 10+((i-1)%halfJsCount)*x*2, love.graphics.getHeight() - y, width, height)
 
-		if joysticks[i].ready then
-			gPrint('Player '..i .. ' ready!', 10+((i-1)%halfJsCount)*x*2 + width/2 - usernameWidth / 2, love.graphics.getHeight() - y + usernameHeight + height/2)
+		if joysticks ~= nil and joysticks[i] ~= nil and joysticks[i].ready then
+			local usernameWidth = self.font:getWidth(joysticks[i].name.. ' ready!')
+			local usernameHeight = self.font:getHeight(joysticks[i].name.. ' ready!')
+			gPrint(joysticks[i].name.. ' ready!', 10+((i-1)%halfJsCount)*x*2 + width/2 - usernameWidth / 2, love.graphics.getHeight() - y + usernameHeight + height/2)
 			local r, g, b, a = love.graphics.getColor()
 			local colorR, colorG, colorB = getPlayerColor(i)
 			love.graphics.setColor(colorR, colorG, colorB, 255)
@@ -134,6 +144,34 @@ function MenuScreen:drawPlayerScreens()
 			gPrint(self.readyText, 10+((i-1)%halfJsCount)*x*2 + width/2 - readyTextWidth/2, love.graphics.getHeight() - y - readyTextHeight + height/2)
 		end
 	end
+end
+
+function updateJSTimer(dt)
+	if joysticks ~= nil then
+		table.foreach(joysticks, function (i)
+			joysticks[i].timer = joysticks[i].timer + dt
+		end)
+	end
+end
+
+function resetJSTimer()
+	if joysticks ~= nil then
+		table.foreach(joysticks, function (i)
+			joysticks[i].timer = 0
+		end)
+	end
+end
+
+function allJSTimerAbove(num)
+	local ret = true
+	if joysticks ~= nil then
+		table.foreach(joysticks, function (i)
+			if joysticks[i].timer < num then
+				ret =  false
+			end
+		end)
+	end
+	return ret
 end
 
 function gPrint(...)
