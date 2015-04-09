@@ -7,7 +7,7 @@ screens = {}
 
 function screens:enterScreen(screen)
 	screenNum = screenNum + 1
-	screens[screenNum] = screen:new()
+	screens[screenNum] = screen
 end
 
 function screens:exitScreen()
@@ -41,7 +41,7 @@ function love.load()
 	love.graphics.setFont(font)
 
 	screenNum = 0
-	screens:enterScreen(MenuScreen)
+	screens:enterScreen(MenuScreen:new())
 end
 
 function love.update(dt)
