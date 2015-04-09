@@ -1,7 +1,7 @@
 Dictionary = Class('Dictionary')
 
 function Dictionary:initialize()
-  local file = 'lib/dictionary.txt'
+  local file = 'data/dictionary.txt'
   self.dict = {}
   self.length = 0
   for line in io.lines(file) do
