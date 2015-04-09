@@ -59,8 +59,12 @@ function PlayScreen:update(dt)
 		platforms[i]:update(dt)
 	end)
 
+	local highscore = 0
 	table.foreach(players, function (i)
 		players[i]:update(dt)
+		if players[i].timer:getTime() > highscore then
+			highscore = players[i].timer:getTime()
+		end
 
 		if numAlive == 1 and players[i].alive then
 			winner = i
@@ -70,6 +74,12 @@ function PlayScreen:update(dt)
 			screens:changeScreen(PlayScreen)
 		end
 	end)
+
+	--set crowns
+	table.foreach(players, function (i)
+		players[i].crown = players[i].timer:getTime() == highscore
+	end)
+	
 	potato:update(dt)
 end
 
