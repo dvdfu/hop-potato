@@ -17,7 +17,7 @@ function Player:initialize(num, name)
 
 	self:respawn()
 	self.controller = Controller:new(num)
-	self.timer = Timer:new(2)
+	self.timer = Timer:new(20)
 	self.injured = false
 	self.injuryFlicker = 0
 
