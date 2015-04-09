@@ -28,7 +28,7 @@ end
 function love.load()
 	math.randomseed(os.time())
 	love.graphics.setDefaultFilter('nearest', 'nearest')
-	love.graphics.setBackgroundColor(40, 50, 60)
+	love.graphics.setBackgroundColor(60, 50, 40)
 
 	font = love.graphics.newImageFont("img/font.png", " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/():;%&`'*#=[]\"")
 	-- font.setWidth(4)
