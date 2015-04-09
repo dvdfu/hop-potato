@@ -149,7 +149,7 @@ end
 function generateName(dict)
 	local n1 = math.random(1, dict:dictLength())
 	local n2 = math.random(1, dict:dictLength())
-	return dict:get()[n1] .. ' ' .. dict:get()[n2]
+	return firstToUpper(dict:get()[n1]) .. ' ' .. firstToUpper(dict:get()[n2])
 end
 
 function updateJSTimer(dt)
@@ -178,6 +178,10 @@ function allJSTimerAbove(num)
 		end)
 	end
 	return bool
+end
+
+function firstToUpper(str)
+	return (str:gsub("^%l", string.upper))
 end
 
 function gPrint(...)
