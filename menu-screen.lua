@@ -7,10 +7,15 @@ MenuScreen = Class('MenuScreen')
 function MenuScreen:initialize()
 	self.startTimerThreshhold = 2
 	self.playersConfigured = false
+	self.title = 'hop-potato'
 	self.subTitle = 'DON\'T STEP IN THE LAVA AND MAKE SURE TO GET RID OF THE POTATO'
 	self.readyText = 'Press start to lock in...'
 	self.gameOverText = 'Game over...'
 	self.controllerText = 'Plug in controller...'
+
+	size72Font = love.graphics.newFont("font/Retro Computer_DEMO.ttf", 72)
+	size20Font = love.graphics.newFont("font/Retro Computer_DEMO.ttf", 20)
+	regFont = love.graphics.newFont("font/Retro Computer_DEMO.ttf", 14)
 
 	joysticks = {}
 	self.dict = Dictionary:new()
@@ -30,18 +35,25 @@ function MenuScreen:initialize()
 	local img = love.graphics.newImage('img/player.png')
 	self.sprite = newAnimation(img, 16, 16, 0.5, 0)
 
-	self.font = love.graphics.newFont("font/Retro Computer_DEMO.ttf", 14)
+	self.font = regFont
 	love.graphics.setFont(self.font);
 	self.readyTextTime = 0.25
 
-
 	self.select = love.audio.newSource("sfx/throw.wav")
 	self.deselect = love.audio.newSource("sfx/jump.wav")
+
+	self.titleShineTimer = 0
+	self.shineCharacter = 0
 end
 
 function MenuScreen:update(dt)
 	local startGame = 0
 	local secondStartPressed = false
+	self.titleShineTimer = self.titleShineTimer + dt
+	if self.titleShineTimer > 0.1 then
+		self.shineCharacter = (self.shineCharacter + 1) % 10
+		self.titleShineTimer = 0
+	end
 
 	updateJSTimer(dt)
 	self.readyTextTime = self.readyTextTime + dt
@@ -91,31 +103,18 @@ function MenuScreen:update(dt)
 end
 
 function MenuScreen:draw()
-	self.font = love.graphics.newFont("font/Retro Computer_DEMO.ttf", 20)
-	love.graphics.setFont(self.font);
+	self:drawShinyTitle()
+
+	self.font = size20Font
+	love.graphics.setFont(self.font)
 	gPrint(self.subTitle, love.graphics.getWidth()/2 - self.font:getWidth(self.subTitle) / 2, love.graphics.getHeight()/4)
-	self.font = love.graphics.newFont("font/Retro Computer_DEMO.ttf", 14)
-	love.graphics.setFont(self.font);
+	self.font = regFont
+	love.graphics.setFont(self.font)
 
 	if self.playersConfigured then
 		self:drawGameOver()
 	else
 		self:drawPlayerScreens()
-	end
-	local curJS = love.joystick.getJoysticks()
-	gPrint('curJS', 10, 10)
-	table.foreach(curJS, function (i)
-		if curJS ~= nil then
-			gPrint(curJS[i]:getName(), 10, i * 20 + 10)
-		end
-	end)
-	gPrint('joystick', 700, 10)
-	if joysticks ~= nil then
-		table.foreach(joysticks, function (i)
-			if joysticks[i].joystick ~= nil then
-				gPrint(joysticks[i].joystick:getName(), 700, i * 20+10)
-			end
-		end)
 	end
 end
 
@@ -174,6 +173,26 @@ function MenuScreen:drawPlayerScreens()
 				end
 			end
 		end
+	end
+end
+
+function MenuScreen:drawShinyTitle()
+	self.font = size72Font
+	love.graphics.setFont(self.font)
+	-- gPrint(self.title, , 50)
+	local startX = love.graphics.getWidth()/2 - self.font:getWidth(self.title)/2
+	local y = 50
+	for i = 0, #self.title do
+		local c = self.title:sub(i+1,i+1)
+		local width = self.font:getWidth(c)
+		if self.shineCharacter == i then
+			love.graphics.setColor(255, 255, 0)
+			gPrint(c, startX, y)
+			love.graphics.setColor(255, 255, 255)
+		else
+			gPrint(c, startX, y)
+		end
+		startX = startX + width
 	end
 end
 

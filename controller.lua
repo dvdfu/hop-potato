@@ -5,9 +5,9 @@ Controller.static.buffer = 0.075
 function Controller:initialize(i)
 	self.controller = i
 	self.joystick = love.joystick.getJoysticks()[i]
-	self.inputType, self.rBumper = self.joystick:getGamepadMapping('rightshoulder')
-	self.startInputType, self.start = self.joystick:getGamepadMapping('start')
-	self.selectInputType, self.select = self.joystick:getGamepadMapping('back')
+	_, self.rBumper = self.joystick:getGamepadMapping('rightshoulder')
+	_, self.start = self.joystick:getGamepadMapping('start')
+	_, self.select = self.joystick:getGamepadMapping('back')
 
 	self.canVibrate = self.joystick:isVibrationSupported()
 	self.id = self.joystick:getID()
