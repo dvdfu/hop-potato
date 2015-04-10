@@ -8,7 +8,7 @@ function Potato:initialize()
 	self.rotation = 0
 	self.dead = false
 	self.carryTime = 0
-	self.allowedCarryTime = 0.4
+	self.allowedCarryTime = 0.2
 
 	--fire particles
 	self.fireSprite = love.graphics.newImage('img/flame.png')
@@ -55,8 +55,10 @@ function Potato:collide()
 	for i = 1, len do
 		local col = cols[i]
 		if col.other.name == 'player' and col.other ~= carrier then
-			self:attach(col.other)
-			hit:play()
+			if self.carryTime > self.allowedCarryTime then
+				self:attach(col.other)
+				hit:play()
+			end
 		elseif carrier == nil and col.other.name == 'platform' and col.normal.y == -1 then
 			self.y = col.other.y - self.h
 			self.vy = -self.vy * 0.8
@@ -184,7 +186,6 @@ end
 
 function Potato:attach(player)
 	if player == nil then return end
-	if carrier ~= nil and self.carryTime < self.allowedCarryTime then return end
 	carrier = player
 	self.carryTime = 0
 	if carrier ~= nil then
