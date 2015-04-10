@@ -14,6 +14,7 @@ function Player:initialize(num)
 	self.w = 32
 	self.h = 32
 	self.crown = false
+	self.right = true
 
 	self:respawn()
 	self.controller = Controller:new(num)
@@ -132,6 +133,8 @@ function Player:update(dt)
 		speedBoost = 1.5
 	end
 	self.vx = self.controller:leftAnalogX() * (Player.move_vel + speedBoost)
+	if self.vx > 0 then self.right = true end
+	if self.vx < 0 then self.right = false end
 
 	--control falling speed
 	if self.respawning then
@@ -194,8 +197,12 @@ function Player:draw()
 
 	if not self.injured or self.injuryFlicker % 4 < 2 then
 		love.graphics.setColor(self.colorR, self.colorG, self.colorB, 255)
-		self.sprite:draw(self.x, self.y, 0, 2, 2)
-		self.sprite:draw(self.x - love.graphics.getWidth(), self.y, 0, 2, 2)
+		local width = 2
+		if not self.right then
+			width = -2
+		end
+		self.sprite:draw(self.x + self.w / 2, self.y, 0, width, 2, 8, 0)
+		self.sprite:draw(self.x + self.w / 2 - love.graphics.getWidth(), self.y, 0, width, 2, 8, 0)
 		love.graphics.setColor(255, 255, 255, 255)
 
 		if self.crown then

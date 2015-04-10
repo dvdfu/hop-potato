@@ -111,6 +111,10 @@ function Potato:update(dt)
 		end
 		self.vx = self.vx * 0.98
 
+		if owner ~= nil and self.carryTime < 1 then
+			self.x = self.x + owner.controller:rightAnalogX() * 8
+		end
+
 	--move potato and check for throws
 	else
 		self.rotation = 0

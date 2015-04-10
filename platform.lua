@@ -7,7 +7,7 @@ end
 
 function Platform:initialize()
 	self.name = 'platform'
-	self.w, self.h = 80, 16
+	self.w, self.h = 128, 16
 	world:add(self, 0, 0, self.w, self.h)
 	self.x, self.y = self:newLocation()
 
@@ -31,7 +31,7 @@ function Platform:update(dt)
 end
 
 function Platform:draw()
-	love.graphics.draw(self.sprite, self.x, self.y, 0, 2, 2)
+	love.graphics.draw(self.sprite, self.x, self.y, 0, self.w / 40, self.h / 8)
 	love.graphics.draw(self.dust);
 end
 
