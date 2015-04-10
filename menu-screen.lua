@@ -48,7 +48,7 @@ function MenuScreen:update(dt)
 	local secondStartPressed = false
 	self.titleShineTimer = self.titleShineTimer + dt
 	if self.titleShineTimer > 0.1 then
-		self.shineCharacter = (self.shineCharacter + 1) % 20
+		self.shineCharacter = (self.shineCharacter + 1) % 10
 		self.titleShineTimer = 0
 	end
 
@@ -179,8 +179,8 @@ function MenuScreen:drawShinyTitle()
 	-- gPrint(self.title, , 50)
 	local startX = love.graphics.getWidth()/2 - self.font:getWidth(self.title)/2
 	local y = 50
-	for i = 1, #self.title do
-		local c = self.title:sub(i,i)
+	for i = 0, #self.title do
+		local c = self.title:sub(i+1,i+1)
 		local width = self.font:getWidth(c)
 		if self.shineCharacter == i then
 			love.graphics.setColor(255, 255, 0)
