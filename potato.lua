@@ -7,23 +7,25 @@ function Potato:initialize()
 	self.vx, self.vy = 0, 0
 	self.rotation = 0
 	self.dead = false
+	self.carryTime = 0
+	self.allowedCarryTime = 0.2
 
 	--fire particles
 	self.fireSprite = love.graphics.newImage('img/flame.png')
 	self.fire = love.graphics.newParticleSystem(self.fireSprite, 1000)
 	self.fire:setAreaSpread('normal', 12, 6)
-	self.fire:setParticleLifetime(0.1, 0.15)
+	self.fire:setParticleLifetime(0.1, 0.3)
 	self.fire:setDirection(-math.pi / 2)
 	self.fire:setSpeed(200, 500)
 	self.fire:setColors(255, 0, 0, 255, 255, 120, 0, 255, 255, 200, 0, 255)
 	self.fire:setEmissionRate(400)
-	self.fire:setSizes(1.5, 0.5)
+	self.fire:setSizes(2, 1)
 
 	--explosion particles
 	self.explosionSprite = love.graphics.newImage('img/particle.png')
 	self.explosion = love.graphics.newParticleSystem(self.explosionSprite, 1000)
 	self.explosion:setAreaSpread('normal', 30, 30)
-	self.explosion:setParticleLifetime(0, 0.6)
+	self.explosion:setParticleLifetime(0, 1)
 	self.explosion:setSpread(math.pi * 2)
 	self.explosion:setSpeed(250, 450)
 	self.explosion:setColors(255, 255, 255, 255, 255, 255, 0, 255, 255, 30, 0, 255, 100, 100, 100, 255)
@@ -52,12 +54,14 @@ function Potato:collide()
 	self.x, self.y = actualX, actualY
 	for i = 1, len do
 		local col = cols[i]
-		if col.other.name == 'player' and col.other ~= carrier and carrierTime > 1 then
-			self:attach(col.other)
-			hit:play()
+		if col.other.name == 'player' and col.other ~= carrier then
+			if self.carryTime > self.allowedCarryTime then
+				self:attach(col.other)
+				hit:play()
+			end
 		elseif carrier == nil and col.other.name == 'platform' and col.normal.y == -1 then
 			self.y = col.other.y - self.h
-			self.vy = -8
+			self.vy = -self.vy * 0.8
 			col.other:leaveDust(self.x + self.w / 2, self.y + self.h)
 			col.other:move()
 			jump:play()
@@ -73,6 +77,8 @@ function Potato:update(dt)
 	self.fire:update(dt)
 	self.explosion:setPosition(self.x + self.w / 2, self.y + self.h / 2)
 	self.explosion:update(dt)
+
+	self.carryTime = self.carryTime + dt
 
 	if carrier ~= nil and not carrier.alive then	
 		local maxTime = 0
@@ -117,8 +123,8 @@ function Potato:update(dt)
 				nocol = true
 				carrier = nil
 				local angle = math.atan2(yOffset, xOffset)
-				self.vx = math.cos(angle) * 25
-				self.vy = math.sin(angle) * 25
+				self.vx = math.cos(angle) * 30
+				self.vy = math.sin(angle) * 30
 				throw:play()
 			end
 		end
@@ -173,6 +179,7 @@ end
 function Potato:explode()
 	self.explosion:setPosition(self.x + self.w / 2, self.y + self.h / 2)
 	self.explosion:emit(600)
+	explode:stop()
 	explode:play()
 end
 
@@ -180,14 +187,14 @@ end
 function Potato:attach(player)
 	if player == nil then return end
 	carrier = player
+	self.carryTime = 0
 	if carrier ~= nil then
 		owner = player
 	end
-	carrierTime = 0
 end
 
 function Potato:draw()
-	love.graphics.setBlendMode('screen')
+	love.graphics.setBlendMode('additive')
 	love.graphics.draw(self.fire)
 	love.graphics.draw(self.fire, -love.graphics.getWidth())
 	love.graphics.draw(self.explosion)

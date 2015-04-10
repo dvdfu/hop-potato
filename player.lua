@@ -183,14 +183,16 @@ end
 function Player:draw()
 	if not self.alive then return end
 
+	if owner == self then
+		love.graphics.setBlendMode('additive')
+		love.graphics.setColor(255, 200, 0, 255)
+		love.graphics.circle('line', self.x + self.w / 2, self.y + self.h / 2, 80)
+		love.graphics.circle('line', self.x + self.w / 2 - love.graphics.getWidth(), self.y + self.h / 2, 80)
+		love.graphics.setBlendMode('alpha')
+		love.graphics.setColor(255, 255, 255, 255)
+	end
+
 	if not self.injured or self.injuryFlicker % 4 < 2 then
-		if owner == self then
-			love.graphics.setBlendMode('additive')
-			love.graphics.setColor(255, 200, 0, 255)
-			love.graphics.rectangle('fill', self.x - 2, self.y - 2, self.w + 4, self.h + 4)
-			love.graphics.rectangle('fill', self.x - 2 - love.graphics.getWidth(), self.y - 2, self.w + 4, self.h + 4)
-			love.graphics.setBlendMode('alpha')
-		end
 		love.graphics.setColor(self.colorR, self.colorG, self.colorB, 255)
 		self.sprite:draw(self.x, self.y, 0, 2, 2)
 		self.sprite:draw(self.x - love.graphics.getWidth(), self.y, 0, 2, 2)
@@ -208,10 +210,9 @@ end
 function Player:respawn()
 	carrier = self
 	owner = carrier
-	carrierTime = 0
 	self.respawnTime = 2
 	self.x = math.random(0, love.window.getWidth())
-	self.y = 20
+	self.y = 60
 	self.vy = 0
 end
 

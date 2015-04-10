@@ -10,7 +10,7 @@ function MenuScreen:initialize()
 	self.subTitle = 'DON\'T STEP IN THE LAVA AND MAKE SURE TO GET RID OF THE POTATO'
 	self.readyText = 'Press start to lock in...'
 	self.gameOverText = 'Game over...'
-	self.controllerText = 'Plug in a controller to begin...'
+	self.controllerText = 'Plug in controller...'
 
 	joysticks = {}
 	self.dict = Dictionary:new()
@@ -34,6 +34,10 @@ function MenuScreen:initialize()
 	self.font = love.graphics.newFont("font/Retro Computer_DEMO.ttf", 14)
 	love.graphics.setFont(self.font);
 	self.readyTextTime = 0.25
+
+
+	self.select = love.audio.newSource("sfx/throw.wav")
+	self.deselect = love.audio.newSource("sfx/jump.wav")
 end
 
 function MenuScreen:update(dt)
@@ -62,14 +66,20 @@ function MenuScreen:update(dt)
 			if joysticks[i].controller ~= nil then
 				if joysticks[i].controller:startButton() then
 					if joysticks[i].ready and allJSTimerAbove(self.startTimerThreshhold) then
-						print('Second start pressed, lets start the game!')
+						print('Second start pressed, let\'s start the game!')
 						secondStartPressed = true
+					end
+					if not joysticks[i].ready then
+						self.select:play()
 					end
 					joysticks[i].ready = true
 					if joysticks[i].timer >= self.startTimerThreshhold then
 						joysticks[i].timer = 0
 					end
 				elseif joysticks[i].controller:selectButton() then
+					if joysticks[i].ready then
+						self.deselect:play()
+					end
 					joysticks[i].name = self.dict:generateName()
 					joysticks[i].ready = false
 					joysticks[i].timer = 0
@@ -140,7 +150,14 @@ function MenuScreen:drawPlayerScreens()
 			y = y * 2
 		end
 
-		gRec('line', 10+((i-1)%halfJsCount)*x*2, love.graphics.getHeight() - y, width, height)
+		local cr, cg, cb = getPlayerColor(i)
+		if joysticks[i].ready then
+			love.graphics.setColor(cr, cg, cb, 160)
+			gRec('fill', 10+((i-1)%halfJsCount)*x*2, love.graphics.getHeight() - y, width, height)
+			love.graphics.setColor(255, 255, 255)
+		else
+			gRec('line', 10+((i-1)%halfJsCount)*x*2, love.graphics.getHeight() - y, width, height)
+		end
 
 		if joysticks ~= nil and joysticks[i] ~= nil then
 			if joysticks[i].ready then
@@ -153,9 +170,9 @@ function MenuScreen:drawPlayerScreens()
 				self.sprite:draw(10+((i-1)%halfJsCount)*x*2 + width/2 - spriteWidth/2, love.graphics.getHeight() - y - spriteHeight - 10 + height / 2, 0, 2, 2)
 				love.graphics.setColor(r, g, b, a)
 			elseif joysticks[i].controller == nil then
-				gPrint(self.controllerText, 10+((i-1)%halfJsCount)*x*2 + width/2 - controllerTextWidth/2, love.graphics.getHeight() - y - controllerTextHeight + height/2)
+				gPrint(self.controllerText, 10+((i-1)%halfJsCount)*x*2 + width/2 - controllerTextWidth/2, love.graphics.getHeight() - y - controllerTextHeight/2 + height/2)
 			elseif self.readyTextTime >= 0.25 then
-				gPrint(self.readyText, 10+((i-1)%halfJsCount)*x*2 + width/2 - readyTextWidth/2, love.graphics.getHeight() - y - readyTextHeight + height/2)
+				gPrint(self.readyText, 10+((i-1)%halfJsCount)*x*2 + width/2 - readyTextWidth/2, love.graphics.getHeight() - y - readyTextHeight/2 + height/2)
 				if self.readyTextTime >= 1 then
 					self.readyTextTime = 0
 				end

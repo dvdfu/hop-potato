@@ -3,6 +3,7 @@ Timer = class('Timer')
 
 function Timer:initialize(start)
 	self.time = start
+	self.font = love.graphics.newFont("font/Retro Computer_DEMO.ttf", 32)
 end
 
 function Timer:update(dt)
@@ -14,10 +15,7 @@ function Timer:update(dt)
 end
 
 function Timer:draw(x, y, textWidth)
-	-- font = love.graphics.newFont("font/Minecraftia-Regular.ttf", 32)
-	local font = love.graphics.newFont("font/Retro Computer_DEMO.ttf", 32)
-	love.graphics.setFont(font)
-
+	love.graphics.setFont(self.font)
 	love.graphics.printf(string.format("%i", math.ceil(self.time)), x, y, textWidth, "center")
 end
 
