@@ -13,6 +13,10 @@ function MenuScreen:initialize()
 	self.gameOverText = 'Game over...'
 	self.controllerText = 'Plug in controller...'
 
+	size72Font = love.graphics.newFont("font/Retro Computer_DEMO.ttf", 72)
+	size20Font = love.graphics.newFont("font/Retro Computer_DEMO.ttf", 20)
+	regFont = love.graphics.newFont("font/Retro Computer_DEMO.ttf", 14)
+
 	joysticks = {}
 	self.dict = Dictionary:new()
 	for i=1,8 do
@@ -31,16 +35,15 @@ function MenuScreen:initialize()
 	local img = love.graphics.newImage('img/player.png')
 	self.sprite = newAnimation(img, 16, 16, 0.5, 0)
 
-	self.font = love.graphics.newFont("font/Retro Computer_DEMO.ttf", 14)
+	self.font = regFont
 	love.graphics.setFont(self.font);
 	self.readyTextTime = 0.25
-
 
 	self.select = love.audio.newSource("sfx/throw.wav")
 	self.deselect = love.audio.newSource("sfx/jump.wav")
 
 	self.titleShineTimer = 0
-	self.shineCharacter = 1
+	self.shineCharacter = 0
 end
 
 function MenuScreen:update(dt)
@@ -102,10 +105,10 @@ end
 function MenuScreen:draw()
 	self:drawShinyTitle()
 
-	self.font = love.graphics.newFont("font/Retro Computer_DEMO.ttf", 20)
+	self.font = size20Font
 	love.graphics.setFont(self.font)
 	gPrint(self.subTitle, love.graphics.getWidth()/2 - self.font:getWidth(self.subTitle) / 2, love.graphics.getHeight()/4)
-	self.font = love.graphics.newFont("font/Retro Computer_DEMO.ttf", 14)
+	self.font = regFont
 	love.graphics.setFont(self.font)
 
 	if self.playersConfigured then
@@ -174,7 +177,7 @@ function MenuScreen:drawPlayerScreens()
 end
 
 function MenuScreen:drawShinyTitle()
-	self.font = love.graphics.newFont("font/Retro Computer_DEMO.ttf", 72)
+	self.font = size72Font
 	love.graphics.setFont(self.font)
 	-- gPrint(self.title, , 50)
 	local startX = love.graphics.getWidth()/2 - self.font:getWidth(self.title)/2
