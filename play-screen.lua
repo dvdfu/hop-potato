@@ -26,7 +26,7 @@ function PlayScreen:initialize(lastWinner)
 	end
 	owner = carrier
 	platforms = {}
-	local numPlatforms = love.graphics.getWidth() * love.graphics.getHeight() / 50000
+	local numPlatforms = love.graphics.getWidth() * love.graphics.getHeight() / 80000
 	for i = 0, numPlatforms, 1 do platforms[i] = Platform:new() end
 	potato = Potato:new()
 	winner = 0

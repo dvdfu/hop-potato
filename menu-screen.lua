@@ -44,6 +44,16 @@ function MenuScreen:initialize()
 
 	self.titleShineTimer = 0
 	self.shineCharacter = 0
+
+	--fire
+	self.fireSprite = love.graphics.newImage('img/flame.png')
+	self.fire = love.graphics.newParticleSystem(self.fireSprite, 1000)
+	self.fire:setAreaSpread('normal', 12, 6)
+	self.fire:setParticleLifetime(0.1, 0.3)
+	self.fire:setDirection(-math.pi / 2)
+	self.fire:setSpeed(200, 500)
+	self.fire:setColors(255, 0, 0, 255, 255, 120, 0, 255, 255, 200, 0, 255)
+	self.fire:setSizes(2, 1)
 end
 
 function MenuScreen:update(dt)
@@ -56,6 +66,7 @@ function MenuScreen:update(dt)
 	end
 
 	updateJSTimer(dt)
+			self.fire:update(dt)
 	self.readyTextTime = self.readyTextTime + dt
 
 	local curJS = love.joystick.getJoysticks()
@@ -107,7 +118,7 @@ function MenuScreen:draw()
 
 	self.font = size20Font
 	love.graphics.setFont(self.font)
-	gPrint(self.subTitle, love.graphics.getWidth()/2 - self.font:getWidth(self.subTitle) / 2, love.graphics.getHeight()/4)
+	gPrint(self.subTitle, love.graphics.getWidth()/2 - self.font:getWidth(self.subTitle) / 2, love.graphics.getHeight()/3)
 	self.font = regFont
 	love.graphics.setFont(self.font)
 
@@ -179,19 +190,22 @@ end
 function MenuScreen:drawShinyTitle()
 	self.font = size72Font
 	love.graphics.setFont(self.font)
-	-- gPrint(self.title, , 50)
 	local startX = love.graphics.getWidth()/2 - self.font:getWidth(self.title)/2
-	local y = 50
+	local y = 160
 	for i = 0, #self.title do
 		local c = self.title:sub(i+1,i+1)
 		local width = self.font:getWidth(c)
 		if self.shineCharacter == i then
+			self.fire:emit(5)
+			love.graphics.setBlendMode('additive')
+			self.fire:setPosition(startX+self.font:getWidth(c)/2, y + self.font:getHeight(c)/2)
+			love.graphics.draw(self.fire)
+			love.graphics.setBlendMode('alpha')
+
 			love.graphics.setColor(255, 255, 0)
-			gPrint(c, startX, y)
-			love.graphics.setColor(255, 255, 255)
-		else
-			gPrint(c, startX, y)
 		end
+		gPrint(c, startX, y)
+		love.graphics.setColor(255, 255, 255)
 		startX = startX + width
 	end
 end
