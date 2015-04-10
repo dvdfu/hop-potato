@@ -113,21 +113,6 @@ function MenuScreen:draw()
 	else
 		self:drawPlayerScreens()
 	end
-	-- local curJS = love.joystick.getJoysticks()
-	-- gPrint('curJS', 10, 10)
-	-- table.foreach(curJS, function (i)
-	-- 	if curJS ~= nil then
-	-- 		gPrint(curJS[i]:getName(), 10, i * 20 + 10)
-	-- 	end
-	-- end)
-	-- gPrint('joystick', 700, 10)
-	-- if joysticks ~= nil then
-	-- 	table.foreach(joysticks, function (i)
-	-- 		if joysticks[i].joystick ~= nil then
-	-- 			gPrint(joysticks[i].joystick:getName(), 700, i * 20+10)
-	-- 		end
-	-- 	end)
-	-- end
 end
 
 function MenuScreen:drawPlayerScreens()
