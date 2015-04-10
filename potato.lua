@@ -7,6 +7,8 @@ function Potato:initialize()
 	self.vx, self.vy = 0, 0
 	self.rotation = 0
 	self.dead = false
+	self.carryTime = 0
+	self.allowedCarryTime = 0.4
 
 	--fire particles
 	self.fireSprite = love.graphics.newImage('img/flame.png')
@@ -17,7 +19,7 @@ function Potato:initialize()
 	self.fire:setSpeed(200, 500)
 	self.fire:setColors(255, 0, 0, 255, 255, 120, 0, 255, 255, 200, 0, 255)
 	self.fire:setEmissionRate(400)
-	self.fire:setSizes(1.5, 0.5)
+	self.fire:setSizes(2, 1)
 
 	--explosion particles
 	self.explosionSprite = love.graphics.newImage('img/particle.png')
@@ -73,6 +75,8 @@ function Potato:update(dt)
 	self.fire:update(dt)
 	self.explosion:setPosition(self.x + self.w / 2, self.y + self.h / 2)
 	self.explosion:update(dt)
+
+	self.carryTime = self.carryTime + dt
 
 	if carrier ~= nil and not carrier.alive then	
 		local maxTime = 0
@@ -180,14 +184,16 @@ end
 
 function Potato:attach(player)
 	if player == nil then return end
+	if carrier ~= nil and self.carryTime < self.allowedCarryTime then return end
 	carrier = player
+	self.carryTime = 0
 	if carrier ~= nil then
 		owner = player
 	end
 end
 
 function Potato:draw()
-	love.graphics.setBlendMode('screen')
+	love.graphics.setBlendMode('additive')
 	love.graphics.draw(self.fire)
 	love.graphics.draw(self.fire, -love.graphics.getWidth())
 	love.graphics.draw(self.explosion)

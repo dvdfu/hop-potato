@@ -107,6 +107,7 @@ function PlayScreen:draw()
 		love.graphics.printf(joysticks[winner].name .. " WINS!", 0, love.window.getHeight() / 2 - 30, love.window.getWidth(), "center")
 
 		love.graphics.setFont(subheadingFont)
+		love.graphics.setColor(255, 255, 255)
 		love.graphics.printf("(Press start to play again)", 0, love.window.getHeight() / 2 + 30, love.window.getWidth(), "center")
 
 		screens:setDefaultFont()

@@ -34,6 +34,10 @@ function MenuScreen:initialize()
 	self.font = love.graphics.newFont("font/Retro Computer_DEMO.ttf", 14)
 	love.graphics.setFont(self.font);
 	self.readyTextTime = 0.25
+
+
+	self.select = love.audio.newSource("sfx/throw.wav")
+	self.deselect = love.audio.newSource("sfx/jump.wav")
 end
 
 function MenuScreen:update(dt)
@@ -62,14 +66,20 @@ function MenuScreen:update(dt)
 			if joysticks[i].controller ~= nil then
 				if joysticks[i].controller:startButton() then
 					if joysticks[i].ready and allJSTimerAbove(self.startTimerThreshhold) then
-						print('Second start pressed, lets start the game!')
+						print('Second start pressed, let\'s start the game!')
 						secondStartPressed = true
+					end
+					if not joysticks[i].ready then
+						self.select:play()
 					end
 					joysticks[i].ready = true
 					if joysticks[i].timer >= self.startTimerThreshhold then
 						joysticks[i].timer = 0
 					end
 				elseif joysticks[i].controller:selectButton() then
+					if joysticks[i].ready then
+						self.deselect:play()
+					end
 					joysticks[i].name = self.dict:generateName()
 					joysticks[i].ready = false
 					joysticks[i].timer = 0
