@@ -51,6 +51,8 @@ function PlayScreen:initialize(lastWinner)
 	self.fire:setColors(255, 0, 0, 255, 255, 120, 0, 255, 255, 200, 0, 255)
 	self.fire:setEmissionRate(2000)
 	self.fire:setSizes(1, 0.5)
+
+	self.playscreenFont = love.graphics.newFont("font/Retro Computer_DEMO.ttf", 15)
 end
 
 function PlayScreen:update(dt)
@@ -114,8 +116,14 @@ function PlayScreen:draw()
 		love.graphics.setColor(255, 255, 255)
 		love.graphics.printf("[START] - play again", 0, love.window.getHeight() / 2 + 30, love.window.getWidth(), "center")
 
-		screens:setDefaultFont()
+		self:setDefaultFont()
 	end
+end
+
+function PlayScreen:setDefaultFont()
+	love.graphics.setColor(255, 255, 255, 255)
+	self.font = self.playscreenFont
+	love.graphics.setFont(self.font)
 end
 
 function PlayScreen:onClose()

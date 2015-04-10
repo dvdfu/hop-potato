@@ -80,18 +80,18 @@ function Potato:update(dt)
 
 	self.carryTime = self.carryTime + dt
 
-	if carrier ~= nil and not carrier.alive then	
+	if carrier ~= nil and not carrier.alive then
 		local maxTime = 0
 		local maxPlayer = nil
 
 		table.foreach(players, function (i)
 			if players[i].alive and players[i].timer:getTime() >= maxTime then
-				maxTime = players[i].timer:getTime() 
-				maxPlayer = i				
+				maxTime = players[i].timer:getTime()
+				maxPlayer = i
 			end
 		end)
 
-		if maxPlayer ~= nil then 
+		if maxPlayer ~= nil then
 			self:attach(players[maxPlayer])
 		end
 
