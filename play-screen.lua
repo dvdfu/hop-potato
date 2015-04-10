@@ -71,8 +71,12 @@ function PlayScreen:update(dt)
 			winner = i
 		end
 
-		if winner ~= 0 and players[i].controller:startButton() then
-			screens:changeScreen(PlayScreen:new(winner))
+		if winner ~= 0 then
+			if players[i].controller:startButton() then
+				screens:changeScreen(PlayScreen:new(winner))
+			elseif players[i].controller:selectButton() then
+				screens:exitScreen()
+			end
 		end
 	end)
 
@@ -108,7 +112,7 @@ function PlayScreen:draw()
 
 		love.graphics.setFont(subheadingFont)
 		love.graphics.setColor(255, 255, 255)
-		love.graphics.printf("(Press start to play again)", 0, love.window.getHeight() / 2 + 30, love.window.getWidth(), "center")
+		love.graphics.printf("[START] - play again", 0, love.window.getHeight() / 2 + 30, love.window.getWidth(), "center")
 
 		screens:setDefaultFont()
 	end

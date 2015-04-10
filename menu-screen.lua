@@ -20,7 +20,6 @@ function MenuScreen:initialize()
 	end
 
 	self.jsCount = love.joystick.getJoystickCount()
-	print('js connected: ' .. self.jsCount)
 	if self.jsCount > 0 then
 		local curJS = love.joystick.getJoysticks()
 		table.foreach(curJS, function (i)
@@ -59,10 +58,8 @@ function MenuScreen:update(dt)
 	local curJS = love.joystick.getJoysticks()
 	local curJSCount = love.joystick.getJoystickCount()
 	if self.jsCount < curJSCount then
-		print('new controller connected')
 
 		for i=self.jsCount+1,curJSCount do
-			print('jsCount ' ..i)
 			joysticks[i].controller = Controller:new(i)
 			joysticks[i].joystick = curJS[i]
 		end
@@ -75,7 +72,6 @@ function MenuScreen:update(dt)
 			if joysticks[i].controller ~= nil then
 				if joysticks[i].controller:startButton() then
 					if joysticks[i].ready and allJSTimerAbove(self.startTimerThreshhold) then
-						print('Second start pressed, let\'s start the game!')
 						secondStartPressed = true
 					end
 					if not joysticks[i].ready then
